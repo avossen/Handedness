@@ -18,7 +18,7 @@ enum plotType{plotType_2D, plotType_1D, plotType_DR,plotType_end};
 class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 {
  public:
-  MultiFitter(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc,int numAngBins=16):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),numAngBins(numAngBins), minCounts(20)
+  MultiFitter(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc,int numAngBins=16):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),numAngBins(numAngBins), minCounts(12)
     {
       zeroBin=0;
       rFile.mkdir("fitHistos");

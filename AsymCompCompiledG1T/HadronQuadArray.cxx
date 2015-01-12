@@ -141,7 +141,7 @@ void HadronQuadArray::mixEvent(HadronQuadArray& hadQuad)
 	  phiZero1=(-1)*phiZero1;
 	  normalizeAngle(phiZero1);
 	  float phiZero2=hadQuad.hp2.phiZero[j];
-	  	  cout <<"mixing phir1 :  " <<phiR1<< " and " <<phiR2<<endl;
+	  //	  	  cout <<"mixing phir1 :  " <<phiR1<< " and " <<phiR2<<endl;
 	  tmpQuadArray.hp1.phiR[pairCounter]=phiR1;
 	  tmpQuadArray.hp2.phiR[pairCounter]=phiR2;
 

@@ -53,7 +53,8 @@ int main(int argc, char** argv)
 
   //
     //        int minExp=32;
-	  int minExp=40;
+  	  int minExp=40;
+
 
   char* rootPath=argv[1];
   srand(time(NULL));
@@ -578,13 +579,16 @@ int main(int argc, char** argv)
 	  pFitter->savePlot(binType_multOnly,quadPN);
       for(plotType pt=plotType_1D;pt<plotType_end;pt=(plotType)((int)pt+1))
 	{
-	  pFitter->savePlot(binType_qTOnly,quadPN);
+
+	  pFitter->savePlot(binType_qTOnly,quadPN,pt);
 	  pFitter->savePlot(binType_z_m,quadPN,pt);
 	  pFitter->savePlot(binType_m_z,quadPN,pt);
-	  pFitter->savePlot(binType_zOnly,quadPN,pt);
+
 	  pFitter->savePlot(binType_ThrustThetaPhi,quadPN,pt);
 	  pFitter->savePlot(binType_ThrustPhiTheta,quadPN,pt);
 	  pFitter->savePlot(binType_mOnly,quadPN,pt);
+	  pFitter->savePlot(binType_zOnly,quadPN,pt);
+	  pFitter->savePlot(binType_labThetaOnly,quadPN,pt);
 	  pFitter->savePlot(binType_ThrustOnly,quadPN,pt);
 	  pFitter->savePlot(binType_EmissOnly,quadPN,pt);
 	  pFitter->savePlot(binType_kinFactOnly,quadPN,pt);

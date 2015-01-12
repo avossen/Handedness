@@ -12,7 +12,7 @@ inherits from ReaderBase for normalizeAngle
 class EventMixMap:public ReaderBase 
 {
  public:
-  EventMixMap(int mNumThrustThetaBins, int mNumThrustPhiBins, int dataMCFlag):queueLength(9)
+  EventMixMap(int mNumThrustThetaBins, int mNumThrustPhiBins, int dataMCFlag):queueLength(4)
     {
       numThrustThetaBins=mNumThrustThetaBins;
       numThrustPhiBins=mNumThrustPhiBins;

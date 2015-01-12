@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     dataMCFlag=mcFlagMC;
 
 
-  EventMixMap evMixMap(20,40,mcFlagMC);
+  EventMixMap evMixMap(10,20,mcFlagMC);
 
   //the input to the weighting has to read the mc part of the tree. That is fine
   //the only excpetion is qT which doesn't exist in _mc. Therefore we have this object first, so that the later hadQuads
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 
   for(long i=0;i<nevents;i++)
     {
-      //      break;
+      break;
       if(!(i%10000))
 	cout <<"processing acc event nr " << i << " of " << nevents << "(" << 100*i/(float)nevents<< "% )"<<endl;
       chAll->GetEntry(i);
@@ -326,7 +326,7 @@ int main(int argc, char** argv)
 	cout <<"processing event nr " << i << " of " << nevents << "(" << 100*i/(float)nevents<< "% )"<<endl;
       chAll->GetEntry(i);
       myEvent.afterFill();
-
+      
       if(myEvent.cutEvent)
 	{
 	  continue;
@@ -339,6 +339,7 @@ int main(int argc, char** argv)
 	}
       //      cout <<"normal quad after fill" <<endl;
       hadQuads.afterFill();
+      //      cout<<"numPairs: "<< hadQuads.hp1.numPairs<<endl;
 
       for(int i=0;i<hadQuads.hp1.numPairs;i++)
 	{
@@ -350,11 +351,17 @@ int main(int argc, char** argv)
       //      hadQuads.print();
 
       //this should contain the other event, so we mix before we assign the new data
-      HadronQuadArray* prevHadQuad=evMixMap.getHadQuadArray(myEvent);
+      int numQuads=0;
+      HadronQuadArray** prevHadQuad=evMixMap.getHadQuadArray(myEvent,numQuads);
       if(prevHadQuad)
 	{
-	  prevHadQuad->mixEvent(hadQuads);
-	  fitterEventMix.addHadQuadArray(prevHadQuad,myEvent);
+	  //	  	  cout <<" mix with " << numQuads <<" quads " <<endl;
+	  for(int iB=0;iB<numQuads;iB++)
+	    {
+	      //	      cout <<"mix it .." <<endl;
+	      prevHadQuad[iB]->mixEvent(hadQuads);
+	      fitterEventMix.addHadQuadArray(prevHadQuad[iB],myEvent);
+	    }
 	}
       evMixMap.addHadQuadArray(hadQuads,myEvent);
 
@@ -594,7 +601,7 @@ int main(int argc, char** argv)
 
   myFitterArray.push_back(&fitterZero);
   myFitterArray.push_back(&fitterZeroAccWeighted);
-  //  myFitterArray.push_back(&fitterMix);
+    myFitterArray.push_back(&fitterMix);
   myFitterArray.push_back(&fitMinusMix);
 
   if(chWoA)

@@ -1150,7 +1150,7 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		      fitResults[resIdx].chi2=100000;
 		    }
 		  fitResults[resIdx].ndf=mFit.GetNDF();
-		  fitResults[resIdx].chi2OverNdf=mFit.GetChisquare()/(float)mFit.GetNDF();
+		  fitResults[resIdx].chi2OverNdf=fitResults[resIdx].chi2/(float)mFit.GetNDF();
 		  fitResults[resIdx].A1=mFit.GetParameter(0);
 		  fitResults[resIdx].eA1=mFit.GetParError(0);
 		  fitResults[resIdx].A2=mFit.GetParameter(1);

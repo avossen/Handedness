@@ -76,7 +76,6 @@ struct HadronQuadArray: public ReaderBase
 
   void afterFill()
   {
-
     hp1.afterFill();
     hp2.afterFill();
     //so we can check in the log files...
