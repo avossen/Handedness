@@ -141,10 +141,10 @@ class MEvent:public ReaderBase
     if(jet1.Angle(jet2)>1.1)
       cutEvent=true;
     //was 1.34 & 1.8
-         if(jet1.Theta()<1.38 || jet1.Theta()>1.75)
-           cutEvent=true;
-        if(jet2.Theta()<1.38 || jet2.Theta()>1.75)
-          cutEvent=true;
+    //         if(jet1.Theta()<1.38 || jet1.Theta()>1.75)
+    //               cutEvent=true;
+    //            if(jet2.Theta()<1.38 || jet2.Theta()>1.75)
+    //              cutEvent=true;
 
     transProj=sin(thetaEThrust)*sin(thetaEThrust)/(1+cos(thetaEThrust)*cos(thetaEThrust));
     longProj=sqrt(1-transProj*transProj);
