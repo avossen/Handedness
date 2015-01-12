@@ -990,7 +990,8 @@ namespace Belle {
 	allPB_particleClass.push_back(-1);
 	allParticlesBoosted.push_back(boostedVec.vect());
 	nonBoostedE.push_back(gammaE);
-	fjParticles.push_back(PseudoJet(boostedVec.px(),boostedVec.py(),boostedVec.pz(),boostedVec.e()));
+	//	if(boostedVec.vect().mag()>0.1)
+	  fjParticles.push_back(PseudoJet(boostedVec.px(),boostedVec.py(),boostedVec.pz(),boostedVec.e()));
 	allPB_E.push_back(boostedVec.e());
 	visEnergy+=boostedVec.e();
 	gammaCount++;

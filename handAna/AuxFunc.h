@@ -59,6 +59,11 @@ class AuxFunc
       Hep3Vector m_axis=axis;
       Hep3Vector m_input=input;
 
+
+      Hep3Vector flipAxis=Hep3Vector(1,0,0);
+      flipAxis.setPhi(axis.phi()-M_PI);
+      flipAxis.setTheta(M_PI-axis.theta());
+
       //      cout <<"input phi: " << m_input.phi()<<endl;
       m_input.rotateZ(-m_axis.phi());
       m_input.rotateY(-m_axis.theta());
@@ -87,6 +92,7 @@ class AuxFunc
       float t2=(zAxis.cross(axis).unit()).dot(axis.cross(input).unit());
       float macosAlt2_unit=acos((zAxis.unit().cross(axis.unit())).dot(axis.unit().cross(input.unit()))); 
       float macosAlt2_unit2=acos((zAxis.cross(axis).unit()).dot(axis.cross(input).unit()));
+      float macosAlt2_unit2_flip=acos((zAxis.cross(flipAxis).unit()).dot(flipAxis.cross(input).unit()));
       //      cout <<" t1: "<< t1 << " t2: " << t2 <<endl;
 
       float macosAlt2=acos((zAxis.cross(axis)).dot(axis.cross(input))/(norm1Alt2*norm2)); 
@@ -111,6 +117,10 @@ class AuxFunc
       float altPhi_u2=sgn(axis.dot(zAxis.cross(axis).cross(axis.cross(input))))*macosAlt2_unit2;
       float altPhi=sgn(axis.dot(kinematics::firstElectronCM.vect().cross(axis).cross(axis.cross(input))))*macos;
 
+
+      float altPhi_u2_flip=sgn(flipAxis.dot(zAxis.cross(flipAxis).cross(flipAxis.cross(input))))*macosAlt2_unit2_flip;
+      //yes... flipped axis leads to negative angle...
+      //      cout <<"phi:" << altPhi_u2 <<" flip: "<< altPhi_u2_flip <<endl;
       if(isnan(altPhi_u2))
 	{
 	  cout <<" isnan altphi2, axis: " << axis << " input: " << input << " macos: "<< macosAlt2 <<" unit2: " << macosAlt2_unit2 <<endl;
