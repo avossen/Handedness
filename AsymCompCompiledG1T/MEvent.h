@@ -51,7 +51,8 @@ class MEvent:public ReaderBase
   //acos(0.5e) is 1.05 rad --> in lab 0.73 -.1.7
   //changed from thetamax proj 0.3 and lower 1.2 , upper 1.9 (cms) to open
   //the non-cms values where 0.14159 and 2.5
-  MEvent(TChain* chain, int mMCFlag=mcFlagNone):ReaderBase(mMCFlag),lowerThrustThetaCut(1.35),upperThrustThetaCut(1.7), thrustThetaCMSMaxProj(1.3), lowerThrustThetaCutCMS(0.0), upperThrustThetaCutCMS(4.9), maxMissingEnergy(2.5),jet1(1,0,0),jet2(1,0,0), minJetE(2.75),jetMaxCMSProj(100),jetMinCMSProj(0.0)
+  //1.35r is the old, 1.7
+  MEvent(TChain* chain, int mMCFlag=mcFlagNone):ReaderBase(mMCFlag),lowerThrustThetaCut(0),upperThrustThetaCut(3.7), thrustThetaCMSMaxProj(1.3), lowerThrustThetaCutCMS(0.0), upperThrustThetaCutCMS(4.9), maxMissingEnergy(2.0),jet1(1,0,0),jet2(1,0,0), minJetE(2.75),jetMaxCMSProj(100),jetMinCMSProj(0.0)
   {
     myChain=chain;
     if(chain)
@@ -139,11 +140,11 @@ class MEvent:public ReaderBase
     //	cout <<"jet E1: "<< jet1E <<" jet2 E: " << jet2E<<endl;
     if(jet1.Angle(jet2)>1.1)
       cutEvent=true;
-
-     if(jet1.Theta()<1.34 || jet1.Theta()>1.8)
-       cutEvent=true;
-    if(jet2.Theta()<1.34 || jet2.Theta()>1.8)
-      cutEvent=true;
+    //was 1.34 & 1.8
+         if(jet1.Theta()<1.38 || jet1.Theta()>1.75)
+           cutEvent=true;
+        if(jet2.Theta()<1.38 || jet2.Theta()>1.75)
+          cutEvent=true;
 
     transProj=sin(thetaEThrust)*sin(thetaEThrust)/(1+cos(thetaEThrust)*cos(thetaEThrust));
     longProj=sqrt(1-transProj*transProj);

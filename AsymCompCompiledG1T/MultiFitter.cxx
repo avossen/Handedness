@@ -915,13 +915,18 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 	    {
 	      for(int secondBin=0;secondBin<maxKinMap[bt].second;secondBin++)
 		{
-		  
+		  bool haveMinCounts=true;
 		  //		  cout <<" fitting " <<getBinName(bt,chargeBin,firstBin, secondBin)<<endl;
 		  ///		  localCounts=rawCounts[bt][chargeBin][firstBin][secondBin];
 		  //go back for now. We have to consider also mean kin computation etc when we change...
 		  localCounts=rawCounts[bt][chargeBin][firstBin][secondBin];
 		  localWCounts=counts[bt][chargeBin][firstBin][secondBin];
 		  localCounts_wSq=counts_wSq[bt][chargeBin][firstBin][secondBin];
+
+		  //check for min counts
+		  haveMinCounts=checkMinCounts(rawCounts[bt][chargeBin][firstBin][secondBin]);
+
+
 		  double AsDRHand, AsErrDRHand, AsDRIff, AsErrDRIff, AsDRG1T, AsErrDRG1T;
 
 		  //should be done for none weighted counts, but then the mc weighting doesn't work...
@@ -1140,6 +1145,10 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		  fitResults[resIdx].C=mFit.GetParameter(0);
 		  fitResults[resIdx].eC=mFit.GetParError(0);
 		  fitResults[resIdx].chi2=mFit.GetChisquare();
+		  if(!haveMinCounts)
+		    {
+		      fitResults[resIdx].chi2=100000;
+		    }
 		  fitResults[resIdx].ndf=mFit.GetNDF();
 		  fitResults[resIdx].chi2OverNdf=mFit.GetChisquare()/(float)mFit.GetNDF();
 		  fitResults[resIdx].A1=mFit.GetParameter(0);
@@ -1449,7 +1458,18 @@ void MultiFitter::reorder(float* mX, float* mY, float* mYErr, int numBins)
     }
 }
 
-
+bool MultiFitter::checkMinCounts(double** counts)
+{
+  for(int i=0;i<numAngBins;i++)
+    {
+      for(int j=0;j<numAngBins;j++)
+	{
+	  if(counts[i][j]<minCounts)
+	    return false;
+	}
+    }
+  return true;
+}
 const int MultiFitter::numKinematicBinning=17;
 const int MultiFitter::numParticles=5;
 const int MultiFitter::NumCharges=7;

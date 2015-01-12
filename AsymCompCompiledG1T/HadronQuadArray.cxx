@@ -77,12 +77,15 @@ void HadronQuadArray::numPairs(int& hemi1, int& hemi2)
 //mix hp1 from one with hp2 of the other
 void HadronQuadArray::mixEvent(HadronQuadArray& hadQuad)
 {
-  //  cout <<"mix hp1 : " << endl;
+
+  //    cout <<"mix hp1 : " << endl;
   //  this->hp2.print();
   //  cout <<" with: "<<endl;
   //  hadQuad.hp2.print();
   int numPairs1=this->hp1.numPairs;
   int numPairs2=hadQuad.hp1.numPairs;
+
+  //  cout <<" numPairs1 " << numPairs1 <<" numPairs2: " << numPairs2 <<endl;
 
   //needed because otherwise we start replacing fields that we mix with lateron
   HadronQuadArray tmpQuadArray(0,this->mMCFlag);
@@ -105,6 +108,7 @@ void HadronQuadArray::mixEvent(HadronQuadArray& hadQuad)
   //	  cout <<"z : " << hadQuad.hp2.z[j]<<endl;
   //	}
   //
+  //  cout <<" numPairs: "<< numPairs1 <<" numPairs2: " << numPairs2<<endl;
   for(int i=0;i<numPairs1;i++)
     {
       //check if we saw all pairs
@@ -137,9 +141,11 @@ void HadronQuadArray::mixEvent(HadronQuadArray& hadQuad)
 	  phiZero1=(-1)*phiZero1;
 	  normalizeAngle(phiZero1);
 	  float phiZero2=hadQuad.hp2.phiZero[j];
-	  //	  cout <<"mixing phir1 :  " <<phiR1<< " and " <<phiR2<<endl;
+	  	  cout <<"mixing phir1 :  " <<phiR1<< " and " <<phiR2<<endl;
 	  tmpQuadArray.hp1.phiR[pairCounter]=phiR1;
 	  tmpQuadArray.hp2.phiR[pairCounter]=phiR2;
+
+	  //	  cout <<" phiR1 " << phiR1 << "..." << phiR2 <<endl;
 	  tmpQuadArray.phiR1[pairCounter]=phiR1;
 	  tmpQuadArray.phiRSum[pairCounter]=phiR1+phiR2;
 	  tmpQuadArray.phiRDiff[pairCounter]=phiR1-phiR2;

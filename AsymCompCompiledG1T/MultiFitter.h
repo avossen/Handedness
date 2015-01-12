@@ -18,7 +18,7 @@ enum plotType{plotType_2D, plotType_1D, plotType_DR,plotType_end};
 class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 {
  public:
-  MultiFitter(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc,int numAngBins=16):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),numAngBins(numAngBins)
+  MultiFitter(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc,int numAngBins=16):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),numAngBins(numAngBins), minCounts(20)
     {
       zeroBin=0;
       rFile.mkdir("fitHistos");
@@ -140,6 +140,8 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 	return binningType*NumCharges*maxKinBins*maxKinBins+chargeType*maxKinBins*maxKinBins+firstKinBin*maxKinBins+secondKinBin;
       }
  protected:
+    bool checkMinCounts(double** counts);
+
     //to reorder arrays used for fitting such that the x values are ascending and do not wrap around
     //should work because y is moved as well
     void reorder(float* mX, float* mY, float* mYErr, int numBins);
@@ -210,6 +212,7 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     float Emiss;
 
 
+    unsigned int minCounts;
     unsigned int numAngBins;
     unsigned int maxKinBins;
     double****** counts;

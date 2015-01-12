@@ -92,13 +92,11 @@ struct HadronQuadArray: public ReaderBase
     if(numPairsHemi1<minPairs || numPairsHemi2<minPairs)
       {
 	//cut all
-
 	for(int i=0;i<hp1.numPairs;i++)
 	  {
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
-
       }
 
     for(int i=0;i<hp1.numPairs;i++)
