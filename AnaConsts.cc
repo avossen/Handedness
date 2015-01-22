@@ -68,8 +68,11 @@ namespace cuts
   //   float maxThrustZ=1.0;//don't care about the endcaps
   float min2H_Z=0.2;
   //float min2H_Z=0.0;
-    float minCosTheta=-0.6; //barrell region?
-    float maxCosTheta=0.9;  //barrel region
+  //    float minCosTheta=-0.6; //barrell region?
+  //    float maxCosTheta=0.9;  //barrel region
+  //if we use jets we should leave this open
+  float minCosTheta=-100;
+  float maxCosTheta=2.0;
   //these angles correspond to eta of -1.32 to 1.9 in the lab system. Since eta is linear under boosts we can use that to have reasonable cuts on the thrust theta
   //if we assume a jet cone of 2*0.3 (very generous, half of that should be sufficient): 23 deg / 140 deg
   // 2* 0.2 ( so 0.2 from the edge: 21/143  

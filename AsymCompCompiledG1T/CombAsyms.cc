@@ -577,13 +577,15 @@ int main(int argc, char** argv)
             pFitter->savePlot(binType_kinFactOnly,quadPN);
 	  pFitter->savePlot(binType_hadOpeningOnly,quadPN);
 	  pFitter->savePlot(binType_multOnly,quadPN);
+	  pFitter->savePlot(binType_m_m,quadPN);
+	  pFitter->savePlot(binType_z_z,quadPN);
       for(plotType pt=plotType_1D;pt<plotType_end;pt=(plotType)((int)pt+1))
 	{
-
 	  pFitter->savePlot(binType_qTOnly,quadPN,pt);
 	  pFitter->savePlot(binType_z_m,quadPN,pt);
 	  pFitter->savePlot(binType_m_z,quadPN,pt);
-
+	  pFitter->savePlot(binType_m_m,quadPN,pt);
+	  pFitter->savePlot(binType_z_z,quadPN,pt);
 	  pFitter->savePlot(binType_ThrustThetaPhi,quadPN,pt);
 	  pFitter->savePlot(binType_ThrustPhiTheta,quadPN,pt);
 	  pFitter->savePlot(binType_mOnly,quadPN,pt);

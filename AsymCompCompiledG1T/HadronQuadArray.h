@@ -197,6 +197,10 @@ struct HadronQuadArray: public ReaderBase
 	  }
 	//	float kinFact=0.02+0.5*hadQuad.hp1.z[i];
 	float kinFact=hadQuad.hp1.z[i];
+	//	cout <<"kinFact: "<< kinFact<<" our z: "<< hp1.z[i]<<endl;
+
+	//	cout <<" phiRDiff: " << hadQuad.phiRDiff[i] << " and ours: " << phiRDiff[i] << " sum: "<< hadQuad.phiRSum[i] <<" and ours: "<< phiRSum[i] <<endl;
+
 	if(debugPrint)
 	  {
 	    cout <<"old weights: " << weight[i] <<" and " << weightZero[i] <<endl;
@@ -207,6 +211,13 @@ struct HadronQuadArray: public ReaderBase
 	//		weightZero[i]=1.0;
 		weight[i]*=(1+kinFact*(a1*cos(hadQuad.phiRSum[i])+a2*cos(hadQuad.phiRDiff[i])+a3*cos(hadQuad.twoPhiRDiff[i])));
 		weightZero[i]*=(1+kinFact*(a1*cos(hadQuad.phiZeroSum[i])+a2*cos(hadQuad.phiZeroDiff[i])+a3*cos(hadQuad.twoPhiZeroDiff[i])));
+		//no mc match
+		if(0==hadQuad.hp1.z[i]|| 0==hadQuad.hp2.z[i])
+		  {
+		    weight[i]=0.0;
+		    weightZero[i]=0.0;
+		  }
+
 	if(debugPrint)
 	  cout <<"weight: " << weight[i] <<" weightZero: "<< weightZero[i]<<endl;
 

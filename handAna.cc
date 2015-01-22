@@ -138,9 +138,12 @@ namespace Belle {
     jetThrustDiff=new TH1D("jetThrustDiff","jetThrustDiff",100,0,1.0);
     jetJetDiff=new TH1D("jetJetDiff","jetJetDiff",100,-1.0,1.0);
     jetEnergy=new TH1D("jetEnergy","jetEnergy",100,0,6);
+    jetEnergyBeforeCuts=new TH1D("jetEnergyBeforeCuts","jetEnergyBeforeCuts",100,0,6);
     numJets=new TH1D("numJets","numJets",10,0,10);
+    numJetsBeforeCuts=new TH1D("numJetsBeforeCuts","numJetsBeforeCuts",10,0,10);
 
     numPartInJet=new TH1D("numPartInJet","numPartInJet",20,0,20);
+    numPartInJetBeforeCuts=new TH1D("numPartInJetBeforeCuts","numPartInJetBeforeCuts",20,0,20);
     partEnergyInJet=new TH1D("partEnergyInJet","partEnergyInJet",100,0,6);
 
 
@@ -1133,27 +1136,30 @@ namespace Belle {
     //    cout <<setw(10)<<" jet # "<<setw(10)<<" Px" <<setw(10)<< "Py"<<setw(10)<<" Pz "<<setw(10)<<"E"<<setw(10)<<" # constituents"<<endl;
     //    cout <<"----------------------------------"<<endl;
 
-
+    //    cout <<"-----------------------------------------------"<<endl<<endl;
+    //    cout <<"-----------------------------------------------"<<endl<<endl;
     for(unsigned int i=0;i<jets.size();i++)
       {
-	jetEnergy->Fill(jets[i].modp());
-	//	cout << setw(10)<< i <<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
-	//     cout << "jet " <<i <<": "<<jets[i].perp()<<" " << jets[i].rap() << " " <<jets[i].phi()<<"   " << jets[i].modp()<<endl;//jets[i].theta()<<endl;
-	if(jets[i].modp()>3.75)
+	jetEnergyBeforeCuts->Fill(jets[i].modp());
+	//	cout<< "Jet Number "  << setw(10)<< i << " momentum (x,y,z)  : "<<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
+	//	     cout << "jet " <<i <<": Pt: "<<jets[i].perp()<<" rapidity: " << jets[i].rap() << " phi: " <<jets[i].phi()<<"  momentum:  " << jets[i].modp()<<endl;//jets[i].theta()<<endl;
+	     //for release, 3.75 was used...
+	if(jets[i].modp()>2.75)
 	  numHighEJets++;
 	vector<PseudoJet> constituents=jets[i].constituents();
-	//	  cout <<"jet " << i <<endl;
-	//   for(unsigned j=0;j<constituents.size();j++)
+	//	cout <<"jet has " << constituents.size() << " consituents: "  <<endl;
+	numPartInJetBeforeCuts->Fill(constituents.size());
+	for(unsigned j=0;j<constituents.size();j++)
 	{
-	  //	 cout <<" constituent " << j << "'s pt: " << constituents[j].perp() <<endl;
-     
-	  //     cout <<"constituent: px: " << constituents[j].px() << " py: " << constituents[j].py() << " Pz: " << constituents[j].pz() <<endl;
+
+	  //	  	 cout <<" constituent  " << j << "'s pt: " << constituents[j].perp() <<endl;
+		 //x	    cout <<"constituent: px: " << constituents[j].px() << " py: " << constituents[j].py() << " Pz: " << constituents[j].pz() <<endl;
 	}
 
       }
     //
-    // if(numHighEJets==2)
-    //   cout <<"it is dijet event" <<endl;
+    //     if(numHighEJets==2)
+    //       cout <<"it is dijet event" <<endl;
     //
     // if(numHighEJets>2)
     //     cout <<"more than dijet event" <<endl;
@@ -1162,8 +1168,7 @@ namespace Belle {
     //      cout <<"monojet event" <<endl;
     //
     //
-
-
+    numJetsBeforeCuts->Fill(jets.size());
     //need dijet event...
     if(numHighEJets!=2)
       {
@@ -1171,6 +1176,11 @@ namespace Belle {
 	return;
       }
     numJets->Fill(jets.size());
+    for(unsigned int i=0;i<jets.size();i++)
+      {
+	jetEnergy->Fill(jets[i].modp());
+
+      }
     //switch jets, so that they are not energy ordered...
     int firstJetI=0;
     int secondJetI=1;
@@ -2567,8 +2577,11 @@ namespace Belle {
     jetThrustDiff->Write();
     jetJetDiff->Write();
     jetEnergy->Write();
+    jetEnergyBeforeCuts->Write();
     numJets->Write();
+    numJetsBeforeCuts->Write();
     numPartInJet->Write();
+    numPartInJetBeforeCuts->Write();
     partEnergyInJet->Write();
 
         cout <<"writing file.." <<endl;

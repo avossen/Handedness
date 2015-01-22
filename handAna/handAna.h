@@ -81,12 +81,15 @@ public:
 
   TH1D* jetThrustDiff;
   TH1D* jetEnergy;
+  TH1D* jetEnergyBeforeCuts;
 
   TH1D* numJets;
+  TH1D* numJetsBeforeCuts;
   TH1D* jetJetDiff;
 
   TH1D* partEnergyInJet;
   TH1D* numPartInJet;
+    TH1D* numPartInJetBeforeCuts;
 
 
 static int getBin(vector<float>& b1, float value)

@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     dataMCFlag=mcFlagMC;
 
 
-  EventMixMap evMixMap(10,20,mcFlagMC);
+  EventMixMap evMixMap(20,40,mcFlagMC);
 
   //the input to the weighting has to read the mc part of the tree. That is fine
   //the only excpetion is qT which doesn't exist in _mc. Therefore we have this object first, so that the later hadQuads
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
 
   for(long i=0;i<nevents;i++)
     {
-      break;
+            break;
       if(!(i%10000))
 	cout <<"processing acc event nr " << i << " of " << nevents << "(" << 100*i/(float)nevents<< "% )"<<endl;
       chAll->GetEntry(i);
@@ -280,7 +280,7 @@ int main(int argc, char** argv)
 	}
       if(isMC==mcAsData || isMC==mcFlagWoA)
 	{
-	  hadQuadsWeighted.doWeighting(*hadQuadsWeighee,0.1,0.02,0.0);
+	  hadQuadsWeighted.doWeighting(*hadQuadsWeighee,0.05,0.0,0.0);
 	}
       accMap.addHadQuadArray(&hadQuads,myEvent);
       accMapWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
@@ -404,8 +404,8 @@ int main(int argc, char** argv)
 
       if(isMC==mcAsData || isMC==mcFlagWoA)
 	{
-	  hadQuadsWeighted.doWeighting(*hadQuadsWeighee,0.1,0.02,0.0);
-	  hadQuadsAccDoubleWeighted.doWeighting(*hadQuadsWeighee,0.1,0.02,0.0);
+	  hadQuadsWeighted.doWeighting(*hadQuadsWeighee,0.05,0.0,0.0);
+	  hadQuadsAccDoubleWeighted.doWeighting(*hadQuadsWeighee,0.05,0.0,0.0);
 	}
 
       hadQuadMix=hadQuads;

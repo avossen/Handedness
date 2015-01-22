@@ -337,6 +337,9 @@ public:
 	{
 	  gph4=get_hepevt(quad->secondHPair->secondHadron->mdstCharged());
 	}
+
+      //      cout <<"input phiR1: " << quad->firstHPair->phiR <<" phiR2: "<< quad->secondHPair->phiR<<endl;
+
       v_g.push_back(&gph1);
       v_g.push_back(&gph2);
       v_g.push_back(&gph3);
@@ -440,6 +443,11 @@ public:
       if(hp1.firstHadron->p().vect().dot(gi.jet1)<0)
 	normalHemi=false;
 
+
+      //            cout <<"mc jet1: "<< gi.jet1 <<" mc jet2: "<< gi.jet2 << " data jet1: "<< kinematics::jet1 <<" jet2: "<< kinematics::jet2 <<endl;
+            //cout <<"normalHemi: "<< normalHemi <<endl;
+      //      cout <<"mc jet energy: "<< gi.jetE1 <<" e2: " << gi.jetE2 << " data: "<< kinematics::jetE1 <<" 2: "<< kinematics::jetE2 <<endl;
+
       if(validType)
 	{
 	  if(normalHemi)
@@ -536,6 +544,8 @@ public:
       hq.firstHPair=&hp1;
       hq.secondHPair=&hp2;
       hq.phiSum=hp1.phiR+hp2.phiR;
+      //      cout <<"mc phiR1: " << hp1.phiR <<" phiR2: "<< hp2.phiR<<endl;
+
       if(validType)
 	{
 	  //	  cout <<"tree saver compQt..." <<endl;

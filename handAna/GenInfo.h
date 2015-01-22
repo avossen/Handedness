@@ -949,7 +949,7 @@ namespace Belle {
 	      if(gen_it->isthep()==1) //isthep==1: stable, ==2, unstable
 		{
 	      //	      if(gen_it->idhep()>6 &&(gId==ID_GAMMA || gId==ID_PI || gId==ID_K))
-		fjParticles.push_back(PseudoJet(boostedVec.px(),boostedVec.py(),boostedVec.py(),boostedVec.e()));
+		fjParticles.push_back(PseudoJet(boostedVec.px(),boostedVec.py(),boostedVec.pz(),boostedVec.e()));
 
 		pxSum+=boostedVec.px();
 		pySum+=boostedVec.py();
@@ -1006,9 +1006,18 @@ namespace Belle {
    {
      //      return;
    }
- jet1=Hep3Vector(jets[0].px(),jets[0].py(),jets[0].pz());
+ if(kinematics::thrustZReverted)
+   {
+     jet2=Hep3Vector(jets[0].px(),jets[0].py(),jets[0].pz());
       //to have the same convention as with thrust we have to flip the direction of the second jet...
- jet2=Hep3Vector((-1)*jets[1].px(),(-1)*jets[1].py(),(-1)*jets[1].pz());
+     jet1=Hep3Vector((-1)*jets[1].px(),(-1)*jets[1].py(),(-1)*jets[1].pz());
+   }
+ else
+   {
+     jet1=Hep3Vector(jets[0].px(),jets[0].py(),jets[0].pz());
+      //to have the same convention as with thrust we have to flip the direction of the second jet...
+     jet2=Hep3Vector((-1)*jets[1].px(),(-1)*jets[1].py(),(-1)*jets[1].pz());
+   }
 
  fluffiness1=AuxFunc::computeFluffiness(jets[0]);
  fluffiness2=AuxFunc::computeFluffiness(jets[1]);
@@ -1052,6 +1061,8 @@ namespace Belle {
 	}
     }
     DebugHistos* m_histos;
+    //    jet1.setX(cmThrust.GetX());
+    //    jet2=cmThrust;
   };
 
 

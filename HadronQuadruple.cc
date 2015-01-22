@@ -45,8 +45,8 @@ namespace Belle {
 
       if(kinematics::evtNr==85)
 	{
-	cout <<"computing phi1_0 1 : " <<hp1_phi1_0 <<" second: " << hp2_phi1_0 << " from ";
-	cout << firstHPair->P_h <<" second: "<< secondHPair->P_h<<endl;
+	  //	cout <<"computing phi1_0 1 : " <<hp1_phi1_0 <<" second: " << hp2_phi1_0 << " from ";
+	  //	cout << firstHPair->P_h <<" second: "<< secondHPair->P_h<<endl;
 	}
 
 
