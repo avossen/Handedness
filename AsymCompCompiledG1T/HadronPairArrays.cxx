@@ -39,12 +39,14 @@ void HadronPairArray::setSingleElement(int pairCounter,HadronPairArray& hp,int i
   z[pairCounter]=hp.z[index];
   zRatio[pairCounter]=hp.zRatio[index];
   z1[pairCounter]=hp.z1[index];
-  z2[pairCounter]=hp.z1[index];
+  z2[pairCounter]=hp.z2[index];
   mass[pairCounter]=hp.mass[index];
   phiR[pairCounter]=hp.phiR[index];
   phiZero[pairCounter]=hp.phiZero[index];
   thrustProj1[pairCounter]=hp.thrustProj1[index];
   thrustProj2[pairCounter]=hp.thrustProj2[index];
+
+  decayTheta[pairCounter]=hp.decayTheta[pairCounter];
 
   theta1[pairCounter]=hp.theta1[index];
   theta2[pairCounter]=hp.theta2[index];

@@ -21,9 +21,9 @@ int main(int argc, char** argv)
   set<int> badOnRes;
   set<int> badCont;
 //   badOnRes.insert(49);
-//  badOnRes.insert(35);
+//  badOnRes.insert(39);
 //
-//  badCont.insert(7);
+//  badCont.insert(71);
 //  badCont.insert(15);
 //  badCont.insert(17);
 //    badCont.insert(23);
@@ -45,16 +45,24 @@ int main(int argc, char** argv)
 //    badCont.insert(43);
 //   badCont.insert(71);
 
+//  badOnRes.insert(61);
+//
+////-  badCont.insert(67);
+////-  badCont.insert(69);
+///-  badCont.insert(71);
 
 
-
-//    badOnRes.insert(71);
+///-    badOnRes.insert(67);
+///-        badOnRes.insert(69);
+///-    badOnRes.insert(71);
 //    badOnRes.insert(55);
 
   //
     //        int minExp=32;
-  	  int minExp=40;
-
+  //int minExp=40;
+    //int minExp=32;
+    //      int minExp=40;
+         int minExp=0;
 
   char* rootPath=argv[1];
   srand(time(NULL));
@@ -184,7 +192,7 @@ int main(int argc, char** argv)
 
       int strangeBin1=pFitter->getResIdx(binType_m_z,quadPN,0,5);
       int strangeBin2=pFitter->getResIdx(binType_m_z,quadPN,1,5);
-      cout <<"strange bin 1: "<< strangeBin1 <<" 2: " << strangeBin2 <<endl;
+      //      cout <<"strange bin 1: "<< strangeBin1 <<" 2: " << strangeBin2 <<endl;
 
       int brokenBin=pFitter->getResIdx(binType_mOnly,quadPN,0,5);
 
@@ -216,32 +224,34 @@ int main(int argc, char** argv)
 	{
 	  float locW[3]={0.0,0.0,0.0};
 	  chAll->GetEntry(i);
-	  	  cout <<"loaded exp: " << fitResults->exp <<" onres? " << fitResults->on_res <<" hand: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<endl;
+	  //	  	  cout <<"loaded exp: " << fitResults->exp <<" onres? " << fitResults->on_res <<" hand: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<endl;
 	  //	  	  if(fitResults->calcType==plotType_1D)
 	  //		    cout <<"is 1D" <<endl;
 	  //	  	  if(fitResults->calcType==plotType_2D)
 	  //		    cout <<"is 2D" <<endl;
 
-		  //	  	   if(!fitResults->on_res)
-		  //	  	     continue;//only on_res
+		  //		  	  	   if(!fitResults->on_res)
+				     //		 	  	     continue;//only on_res
 	  //	    	  if(fitResults->on_res)
 		    //	    continue;//only continuum
 	  if(fitResults->exp<=minExp ||(fitResults->on_res && (badOnRes.find(fitResults->exp)!=badOnRes.end())) ||(!fitResults->on_res && (badCont.find(fitResults->exp)!=badCont.end())))
 	    continue;
 
-	  //	  if(fitResults->isCharm)
-	  //	    continue;
+	  //	  	  if(!fitResults->isCharm)
+	  //	  continue;
 
 	  //	  cout <<"we got the asymmetry: " << fitResults->A1 <<" for " << *it <<endl;
 	  //	  cout <<"loading resIdx: " << fitResults->resultIndex<<" oneD? "<< fitResults->calcType<<endl;
 	  //	  fitResults->print();
-	  pFitter->fitResults[fitResults->resultIndex].setChi2NdfCut(5.0);
-	  pFitter->fitResults1D[fitResults->resultIndex].setChi2NdfCut(5.0);
-	  pFitter->fitResultsDR[fitResults->resultIndex].setChi2NdfCut(5.0);
+	  //was max 5 and min 0.1
 
-	  pFitter->fitResults[fitResults->resultIndex].setMinChi2NdfCut(0.1);
-	  pFitter->fitResults1D[fitResults->resultIndex].setMinChi2NdfCut(0.1);
-	  pFitter->fitResultsDR[fitResults->resultIndex].setMinChi2NdfCut(0.1);
+	  pFitter->fitResults[fitResults->resultIndex].setChi2NdfCut(50.0);
+	  pFitter->fitResults1D[fitResults->resultIndex].setChi2NdfCut(50.0);
+	  pFitter->fitResultsDR[fitResults->resultIndex].setChi2NdfCut(50.0);
+
+	  pFitter->fitResults[fitResults->resultIndex].setMinChi2NdfCut(0.0);
+	  pFitter->fitResults1D[fitResults->resultIndex].setMinChi2NdfCut(0.0);
+	  pFitter->fitResultsDR[fitResults->resultIndex].setMinChi2NdfCut(0.0);
 
 	  if(fitResults->calcType==plotType_DR)
 	      pFitter->fitResultsDR[fitResults->resultIndex]+=(*fitResults);
@@ -261,9 +271,9 @@ int main(int argc, char** argv)
 	      if(fitResults->resultIndex==brokenBin)
 		{
 
-		  cout <<"fitter name; " << *it <<endl;
-		cout << "broken bin a1: "<< fitResults->A1 <<" +- " << fitResults->eA1 << " a2: " << fitResults->A2 <<" +- " << fitResults->eA2 << " a3: " << fitResults->A3 <<" +- " << fitResults->eA3 << endl;
-		cout <<"pFitter: broken bin a1: "<< pFitter->fitResults[brokenBin].A1 <<" +- " << pFitter->fitResults[brokenBin].eA1 << " a2: " << pFitter->fitResults[brokenBin].A2 <<" +- " << pFitter->fitResults[brokenBin].eA2 << " a3: " << pFitter->fitResults[brokenBin].A3 <<" +- " << pFitter->fitResults[brokenBin].eA3 << endl;
+		  //		  cout <<"fitter name; " << *it <<endl;
+		  //		cout << "broken bin a1: "<< fitResults->A1 <<" +- " << fitResults->eA1 << " a2: " << fitResults->A2 <<" +- " << fitResults->eA2 << " a3: " << fitResults->A3 <<" +- " << fitResults->eA3 << endl;
+		  //		cout <<"pFitter: broken bin a1: "<< pFitter->fitResults[brokenBin].A1 <<" +- " << pFitter->fitResults[brokenBin].eA1 << " a2: " << pFitter->fitResults[brokenBin].A2 <<" +- " << pFitter->fitResults[brokenBin].eA2 << " a3: " << pFitter->fitResults[brokenBin].A3 <<" +- " << pFitter->fitResults[brokenBin].eA3 << endl;
 		}
 	    }
 
@@ -308,9 +318,13 @@ int main(int argc, char** argv)
 		  
 
 	      if(strangeBin1==fitResults->resultIndex)
-		cout <<"strange 1: exp: " << fitResults->exp << "on res: " << fitResults->on_res <<" handed: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<" fitter: " << (*it)<<endl;
+		{
+		  //cout <<"strange 1: exp: " << fitResults->exp << "on res: " << fitResults->on_res <<" handed: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<" fitter: " << (*it)<<endl;
+		}
 	      if(strangeBin2==fitResults->resultIndex)
-		cout <<"strange 2: exp: " << fitResults->exp << "on res: " << fitResults->on_res <<" handed: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<" fitter: " << (*it)<<endl;
+		{
+		  //				cout <<"strange 2: exp: " << fitResults->exp << "on res: " << fitResults->on_res <<" handed: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<" fitter: " << (*it)<<endl;
+		}
 
 
 
@@ -334,6 +348,9 @@ int main(int argc, char** argv)
 	    }
 
 	}
+      /////everything should be combined here
+
+
       for(int i=0;i<200;i++)
 	{
 	  for(int j=0;j<3;j++)
@@ -431,6 +448,9 @@ int main(int argc, char** argv)
       //only want to plot for the real results
       if((*it)==string("multFitOutWeighted"))
 	{
+
+
+
 	  	  cout<<"saving results vs exp" <<endl;
 	  TFile tmpFile("resVsExpWeighted.root","recreate");
 	  TGraphErrors tgA1(counter[0],mX[0],mY[0],mXErr[0],mYErr[0]);
@@ -494,6 +514,20 @@ int main(int argc, char** argv)
             //only want to plot for the real results
       if((*it)==string("multFitOut"))
 	{
+	  int maxMBin=pFitter->maxKinMap[binType_m_m].second;
+
+	  for(int m1bin=0;m1bin<maxMBin;m1bin++)
+	    {
+	      for(int m2bin=0;m2bin<maxMBin;m2bin++)
+		{
+		  cout <<"m1 bin: " << m1bin<<" m2bin: "<< m2bin<<endl;
+		  int resIdx=pFitter->getResIdx(binType_m_m,quadPN,m1bin,m2bin);
+		  cout <<pFitter->fitResults[resIdx].meanKinBin1 <<", " << pFitter->fitResults[resIdx].meanKinBin2<<", A: "<< pFitter->fitResults[resIdx].getA(0) <<" +- "<< pFitter->fitResults[resIdx].getErr(0)<<endl;
+		}
+	    }
+
+
+
 	  cout<<"saving results vs exp" <<endl;
 	  TFile tmpFile("resVsExp.root","recreate");
 	  TGraphErrors tgA1(counter[0],mX[0],mY[0],mXErr[0],mYErr[0]);
@@ -562,6 +596,8 @@ int main(int argc, char** argv)
       pFitter->savePlot(binType_labTheta_z,quadPN);
       pFitter->savePlot(binType_kinFact_z,quadPN);
       pFitter->savePlot(binType_zOnly,quadPN);
+      pFitter->savePlot(binType_sinDecThetaOnly,quadPN);
+      pFitter->savePlot(binType_cosDecThetaOnly,quadPN);
 
       pFitter->savePlot(binType_ThrustThetaPhi,quadPN);
       pFitter->savePlot(binType_ThrustPhiTheta,quadPN);
@@ -590,6 +626,8 @@ int main(int argc, char** argv)
 	  pFitter->savePlot(binType_ThrustPhiTheta,quadPN,pt);
 	  pFitter->savePlot(binType_mOnly,quadPN,pt);
 	  pFitter->savePlot(binType_zOnly,quadPN,pt);
+	  pFitter->savePlot(binType_sinDecThetaOnly,quadPN,pt);
+	  pFitter->savePlot(binType_cosDecThetaOnly,quadPN,pt);
 	  pFitter->savePlot(binType_labThetaOnly,quadPN,pt);
 	  pFitter->savePlot(binType_ThrustOnly,quadPN,pt);
 	  pFitter->savePlot(binType_EmissOnly,quadPN,pt);
@@ -599,7 +637,7 @@ int main(int argc, char** argv)
 	}
 
       
-           cout <<"looking at fitter: " << *it<< " for aggregate asyms " <<endl;
+      cout <<"looking at fitter: " << *it<< " for aggregate asyms " <<endl;
       pFitter->getIntAsymmetry(a,ea,binType_mOnly,quadPN);
       cout <<"aggregate m asyms: "<<endl;
       cout<< a[0] <<" +- " <<ea[0]<< " , " <<a[1] <<" +- " <<ea[1]<< " , " <<a[2] <<" +- " <<ea[2]<< " , " <<endl;

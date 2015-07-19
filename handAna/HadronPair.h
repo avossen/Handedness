@@ -1,3 +1,4 @@
+
 #ifndef HADRONPAIR_H
 #define HADRONPAIR_H
 #include "event/BelleEvent.h"
@@ -67,7 +68,7 @@ class HadronPair
       ParticleInfo& pinf2=dynamic_cast<ParticleInfo&>(secondHadron->userInfo());
       z=pinf.z+pinf2.z;
       double E1,E2;
-      //      Rvect=firstHadron->p().vect()-secondHadron->p().vect();
+      //      Rrvect=firstHadron->p().vect()-secondHadron->p().vect();
       //weighted RVect according to Artru
       //      cout <<"vectors first: "<< firstHadron->p().vect() << " second : "<< secondHadron->p().vect()<<endl;
       //      cout <<"norming with " << pinf2.z << ", " << pinf.z <<" vects: "<< pinf2.z*firstHadron->p().vect() << " and : "<< pinf.z*secondHadron->p().vect()<<endl;

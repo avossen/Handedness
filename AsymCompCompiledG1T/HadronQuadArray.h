@@ -78,6 +78,13 @@ struct HadronQuadArray: public ReaderBase
   {
     hp1.afterFill();
     hp2.afterFill();
+
+    //    for(int i=0;i<hp1.numPairs;i++)
+    //      {
+    //cout <<"we have z1[" <<i<<"] : "<< hp1.z[i] <<" z2: "<< hp2.z[i] <<endl;
+    // cout <<" and decTheta: "<< hp1.decayTheta[i] << " decT2: "<< hp2.decayTheta[i] <<endl;
+    //}
+  //    cout <<endl;
     //so we can check in the log files...
     if(hp1.numPairs>Max_ArrSize)
       cout<<" too many pairs!!!: " << hp1.numPairs<<endl;
@@ -196,7 +203,9 @@ struct HadronQuadArray: public ReaderBase
 	    this->hp2.cut[i]=1;
 	  }
 	//	float kinFact=0.02+0.5*hadQuad.hp1.z[i];
+	//	float kinFact=hadQuad.hp1.z[i]*hadQuad.hp2.z[i];
 	float kinFact=hadQuad.hp1.z[i];
+
 	//	cout <<"kinFact: "<< kinFact<<" our z: "<< hp1.z[i]<<endl;
 
 	//	cout <<" phiRDiff: " << hadQuad.phiRDiff[i] << " and ours: " << phiRDiff[i] << " sum: "<< hadQuad.phiRSum[i] <<" and ours: "<< phiRSum[i] <<endl;

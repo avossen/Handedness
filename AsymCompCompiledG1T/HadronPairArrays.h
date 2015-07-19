@@ -19,7 +19,8 @@ struct HadronPairArray:public ReaderBase
   const float zUpperCut;
   const float singleZCut;
   const float singleZUpperCut;
-
+  const float maxLabCosTheta;
+  const float minLabCosTheta;
 
   int hadPairNum;
   int numPairs;
@@ -31,11 +32,13 @@ struct HadronPairArray:public ReaderBase
   float mass[Max_ArrSize];
   float phiR[Max_ArrSize];
   float phiZero[Max_ArrSize];
-
+  float decayTheta[Max_ArrSize];
   float thrustProj1[Max_ArrSize];
   float thrustProj2[Max_ArrSize];
   float theta1[Max_ArrSize];
   float theta2[Max_ArrSize];
+
+
   float phi1[Max_ArrSize];
   float phi2[Max_ArrSize];
   float pi0mass1[Max_ArrSize];
@@ -55,7 +58,7 @@ struct HadronPairArray:public ReaderBase
   float hadOpening[Max_ArrSize];
   //considering the thrust axis resolution of 0.16+-0.09 rad, a max opening cut of 0.99 is even too large...
   //changed in nov: opening cut 0.2 -->1.2
-  HadronPairArray(TChain* chain,int hadNum, int MCFlag=mcFlagNone):ReaderBase(MCFlag),OpeningCut(0.0),maxOpeningCut(1.999),pi0LowCut(0.12), pi0HighCut(0.15), pi0LowBgCut(0.21), pi0HighBgCut(0.3), zCut(0.2),singleZCut(0.1), zUpperCut(1.4),singleZUpperCut(1.3)
+  HadronPairArray(TChain* chain,int hadNum, int MCFlag=mcFlagNone):ReaderBase(MCFlag),OpeningCut(0.0),maxOpeningCut(1.9999),pi0LowCut(0.12), pi0HighCut(0.15), pi0LowBgCut(0.21), pi0HighBgCut(0.3), zCut(0.2),singleZCut(0.1), zUpperCut(1.4),singleZUpperCut(1.3),maxLabCosTheta(100.9),minLabCosTheta(-100.6)
   {
     //no chain implies standalone. Cannot branch on the same field twice, this would override
     //    cout <<" do we have a chain? " << chain<<endl;
@@ -71,6 +74,8 @@ struct HadronPairArray:public ReaderBase
 
 	branchPointers.push_back(thrustProj1);
 	branchPointers.push_back(thrustProj2);
+	branchPointers.push_back(decayTheta);
+
 	branchPointers.push_back(theta1);
 	branchPointers.push_back(theta2);
 	branchPointers.push_back(phi1);
@@ -100,6 +105,7 @@ struct HadronPairArray:public ReaderBase
 	branchNames.push_back("mass"+sAdd+addendum);
 	branchNames.push_back("thrustProj"+sAdd+"1"+addendum);
 	branchNames.push_back("thrustProj"+sAdd+"2"+addendum);
+	branchNames.push_back("decayTheta"+sAdd+addendum);
 	branchNames.push_back("theta"+sAdd+"1"+addendum);
 	branchNames.push_back("theta"+sAdd+"2"+addendum);
 
@@ -174,7 +180,16 @@ struct HadronPairArray:public ReaderBase
 
 	///------------------
 
-
+	//       if(cos(decayTheta[i])<0)
+	//	  	  cut[i]=1;
+	if(cos(theta1[i])<minLabCosTheta && cos(theta2[i])<minLabCosTheta)
+	  {
+	    cut[i]=1;
+	  }
+	if(cos(theta1[i])>maxLabCosTheta && cos(theta2[i])>maxLabCosTheta)
+	  {
+	    cut[i]=1;
+	  }
 	if(z[i]<=0 || z[i] >1.1)
 	  {
 	    //	    if(particleType[i]==0 && chargeType[i]==0)
@@ -218,10 +233,14 @@ struct HadronPairArray:public ReaderBase
 	    //	    cout <<"cut, mass is wrong... " <<endl;
 	  cut[i]=1;
 	  }
-
+	//	cout <<"getting dec theta: "<< decayTheta[i]<<", z is: "<< z[i] <<endl;;
 	hadOpening[i]=fabs(thrustProj1[i]);
 	if(fabs(thrustProj2[i])<fabs(thrustProj1[i]))
 	  hadOpening[i]=fabs(thrustProj2[i]);
+
+
+	//	cout <<"hadOpening: " << hadOpening[i]<<endl;
+
 	if(fabs(thrustProj1[i])<OpeningCut || fabs(thrustProj2[i])<OpeningCut)
 	  {
 	    cut[i]=1;

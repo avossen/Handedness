@@ -59,7 +59,6 @@ class AuxFunc
       Hep3Vector m_axis=axis;
       Hep3Vector m_input=input;
 
-
       Hep3Vector flipAxis=Hep3Vector(1,0,0);
       flipAxis.setPhi(axis.phi()-M_PI);
       flipAxis.setTheta(M_PI-axis.theta());
@@ -81,7 +80,7 @@ class AuxFunc
 
       if(print)
 	{
-	  	  cout << " cos value: " << ((zAxis.cross(axis)).dot(axis.cross(input))/(norm1Alt2*norm2))<<endl;
+	  	  	  cout << " cos value: " << ((zAxis.cross(axis)).dot(axis.cross(input))/(norm1Alt2*norm2))<<endl;
 	  cout <<"sgn: " << sgn(axis.dot(zAxis.cross(axis).cross(axis.cross(input))))<<endl;
 	}
 
@@ -99,11 +98,11 @@ class AuxFunc
       //      cout <<"macos Alt2 " << macosAlt2<<" unit: "<< macosAlt2_unit <<" unit2: "<< macosAlt2_unit2 <<endl;
       if(isnan(macosAlt2_unit2))
 	{
-	  cout <<"axis:" << axis <<" zaxis:" << zAxis <<" input; "<< input<<endl;
-	  cout <<"first corss: " << zAxis.cross(axis)<<", second: "<< axis.cross(input)<<endl;
-	  cout <<"isnan macosAlt2, zAxis: "<< zAxis <<" axis: "<< axis <<" input: " << input  <<" norm1: " << norm1Alt2 <<" norm2: "<< norm2 <<endl;
+	  //	  cout <<"axis:" << axis <<" zaxis:" << zAxis <<" input; "<< input<<endl;
+	  //	  cout <<"first corss: " << zAxis.cross(axis)<<", second: "<< axis.cross(input)<<endl;
+	  //	  cout <<"isnan macosAlt2, zAxis: "<< zAxis <<" axis: "<< axis <<" input: " << input  <<" norm1: " << norm1Alt2 <<" norm2: "<< norm2 <<endl;
 	  float dotPr=(zAxis.cross(axis).dot(axis.cross(input)));
-	  	  cout <<"first cross: " <<  " dot: "<< dotPr <<" cos: "<<  ((zAxis.cross(axis)).dot(axis.cross(input))/(norm1Alt2*norm2))<<endl;
+	  //	  	  cout <<"first cross: " <<  " dot: "<< dotPr <<" cos: "<<  ((zAxis.cross(axis)).dot(axis.cross(input))/(norm1Alt2*norm2))<<endl;
 	}
       //           float macos=acos((kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input))/(norm1*norm2));
       //            cout <<macos<< " norm1: " << norm1 <<"norm2; " << norm2 << endl;
@@ -120,11 +119,11 @@ class AuxFunc
 
       float altPhi_u2_flip=sgn(flipAxis.dot(zAxis.cross(flipAxis).cross(flipAxis.cross(input))))*macosAlt2_unit2_flip;
       //yes... flipped axis leads to negative angle...
-      //      cout <<"phi:" << altPhi_u2 <<" flip: "<< altPhi_u2_flip <<endl;
+      //            cout <<"phi:" << altPhi_u2 <<" flip: "<< altPhi_u2_flip <<endl;
       if(isnan(altPhi_u2))
 	{
-	  cout <<" isnan altphi2, axis: " << axis << " input: " << input << " macos: "<< macosAlt2 <<" unit2: " << macosAlt2_unit2 <<endl;
-	  cout <<"altphi is: "<< altPhi <<endl;
+	  //	  cout <<" isnan altphi2, axis: " << axis << " input: " << input << " macos: "<< macosAlt2 <<" unit2: " << macosAlt2_unit2 <<endl;
+	  //	  cout <<"altphi is: "<< altPhi <<endl;
 	}
 
       if(print)
@@ -154,7 +153,7 @@ class AuxFunc
      //altPhi2 and input.phi are exactly the same...
       //    return m_input.phi();
       
-      //      cout << altPhi<< "2 " << altPhi2<< " altphiUnit: "<< altPhi2_unit<<endl;
+      //           cout << altPhi<< "2 " << altPhi2<< " altphiUnit: "<< altPhi2_unit<<endl;
       //      return altPhi2;
       if(isnan(altPhi) )
 	{
@@ -189,13 +188,13 @@ class AuxFunc
       //return m_input.phi();
       if(isnan(altPhi))
 	{
-	 cout <<"aux::getPhi is not number nan, axis: " << m_axis <<" input: " << m_input << " norm1: " << norm1 <<" norm2: " << norm2 <<" altPHi: " << altPhi <<endl;
-	 cout <<"input phi: "<< m_input.phi()<<endl;
-	 cout <<"electron vec: " << kinematics::firstElectronCM.vect() <<", first fact "<< axis.dot(kinematics::firstElectronCM.vect().cross(axis).cross(axis.cross(input.p().vect())));
-	 cout <<" second factor: " << acos((kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect()))/(norm1*norm2)) <<endl;
-	 cout << " second fact first part: " <<kinematics::firstElectronCM.vect().cross(axis) <<" , " << axis.cross(input.p().vect()) <<" dot: " << (kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect())) <<" n*n2: " << norm1*norm2 <<endl;
-	 cout <<" is "  <<kinematics::firstElectronCM.vect().cross(axis) <<" parallel to " << axis.cross(input.p().vect())<< kinematics::firstElectronCM.vect().cross(axis).angle(axis.cross(input.p().vect()))<<endl;
-	 cout <<"input to acos: " << (kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect()))/(norm1*norm2)<<endl;
+	  //	 cout <<"aux::getPhi is not number nan, axis: " << m_axis <<" input: " << m_input << " norm1: " << norm1 <<" norm2: " << norm2 <<" altPHi: " << altPhi <<endl;
+	  //	 cout <<"input phi: "<< m_input.phi()<<endl;
+	 //	 cout <<"electron vec: " << kinematics::firstElectronCM.vect() <<", first fact "<< axis.dot(kinematics::firstElectronCM.vect().cross(axis).cross(axis.cross(input.p().vect())));
+	  //	 cout <<" second factor: " << acos((kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect()))/(norm1*norm2)) <<endl;
+	  //	 cout << " second fact first part: " <<kinematics::firstElectronCM.vect().cross(axis) <<" , " << axis.cross(input.p().vect()) <<" dot: " << (kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect())) <<" n*n2: " << norm1*norm2 <<endl;
+	  //	 cout <<" is "  <<kinematics::firstElectronCM.vect().cross(axis) <<" parallel to " << axis.cross(input.p().vect())<< kinematics::firstElectronCM.vect().cross(axis).angle(axis.cross(input.p().vect()))<<endl;
+	  //	 cout <<"input to acos: " << (kinematics::firstElectronCM.vect().cross(axis)).dot(axis.cross(input.p().vect()))/(norm1*norm2)<<endl;
 
 	}
 
@@ -238,7 +237,7 @@ class AuxFunc
 	    {
 	      if(pt2.charge() > 0)
 		{
-		  cout <<"forbidden charge combination" << endl;
+		  	  cout <<"forbidden charge combination" << endl;
 		  //not relly, in mc possible (of course not wanted)
 		  return AnaDef::NP;
 		}
@@ -247,7 +246,7 @@ class AuxFunc
 		return AnaDef::NN;
 
 
-	      cout <<"forbidden charge combination" << endl;
+	      	      cout <<"forbidden charge combination" << endl;
 	      return AnaDef::NZ;
 	      //	      return AnaDef::NZ;
 	    }

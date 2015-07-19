@@ -9,9 +9,16 @@
 #include "HadronQuadArray.h" 
 #include "stdlib.h"
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+
+
 
 #define NumParticles 7
-enum binningType{binType_m_m, binType_z_z,binType_z_m, binType_m_z, binType_labTheta_z, binType_kinFact_z, binType_zOnly, binType_mOnly, binType_labThetaOnly, binType_qTOnly, binType_kinFactOnly, binType_hadOpeningOnly, binType_ThrustThetaPhi,binType_ThrustPhiTheta, binType_multOnly, binType_EmissOnly, binType_ThrustOnly,binType_end};
+
+/// DO NOT FORGET to change the number of kinematic binnings in the cxx file!!!
+/// and if NEW FIELDS ARE ADDED, they also have to be added in the '=' operator implementation of HadronQuad and PairArray..
+enum binningType{binType_m_m, binType_z_z,binType_z_m, binType_m_z, binType_labTheta_z, binType_kinFact_z, binType_zOnly, binType_mOnly, binType_labThetaOnly, binType_qTOnly, binType_kinFactOnly, binType_hadOpeningOnly, binType_ThrustThetaPhi,binType_ThrustPhiTheta, binType_multOnly, binType_EmissOnly, binType_ThrustOnly,binType_sinDecThetaOnly,binType_cosDecThetaOnly,binType_end};
 enum quadType{quadPN, quadPZ_ZN, quadPN_PZ, quadPN_ZN,quadPZ, quadZN,quadPP_NN, quadUnknownCharge, quadTypeEnd};
 enum plotType{plotType_2D, plotType_1D, plotType_DR,plotType_end};
 
@@ -57,6 +64,10 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 	maxKinBins=binningThrust.size();
       if(binningEmiss.size()>maxKinBins)
 	maxKinBins=binningEmiss.size();
+      if(binningSinDecTheta.size()>maxKinBins)
+	maxKinBins=binningSinDecTheta.size();
+      if(binningCosDecTheta.size()>maxKinBins)
+	maxKinBins=binningCosDecTheta.size();
 
       hChi2OverNdf=new TH1D("chi2OverNdf","chi2OverNdf",100,0,6);
       hOneDVsTwoDA1=new TH1D("oneDVs2DA1","oneDVs2DA1",100,-3,3);
@@ -111,11 +122,32 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
       meanValues_kin1=allocateArray<double>(numKinematicBinning,NumCharges,maxKinBins,maxKinBins);
       meanValues_kin2=allocateArray<double>(numKinematicBinning,NumCharges,maxKinBins,maxKinBins);
 
+
+      eventCounts=new TH1D***[numKinematicBinning];
+      char buffer[200];
+      for(int iB=0;iB<numKinematicBinning;iB++)
+	{
+	  eventCounts[iB]=new TH1D**[NumCharges];
+	  for(int iC=0;iC<=quadPN;iC++)
+	    {
+	      eventCounts[iB][iC]=new TH1D*[maxKinMap[iB].first+1];
+	      for(int iK=0;iK<=maxKinMap[iB].first;iK++)
+		{
+		  sprintf(buffer,"%s_eventCounts_%s",filenameBase,getBinName(iB,iC,iK,0).c_str());
+		  cout <<" creating eventCountHisto: "<< buffer << " bt: "<< iB << " kin: " << iK <<endl;
+  		  eventCounts[iB][iC][iK]=new TH1D(buffer,buffer,maxKinMap[iB].second,0,maxKinMap[iB].second);
+		}
+	    }
+
+	}
+
+      openXCheckFiles();
+
     };
 
     //
     //    void setFitReuslt();
-
+    void openXCheckFiles();
     void addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero=false);
     void setBinningMap();
     void doFits(MultiFitter* mfMix=0);
@@ -141,6 +173,8 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
       }
  protected:
     bool checkMinCounts(double** counts);
+    ofstream ****xCheckEventLists;
+
 
     //to reorder arrays used for fitting such that the x values are ascending and do not wrap around
     //should work because y is moved as well
@@ -158,6 +192,7 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 
     //give negative values for first or second bin if they should not be part of the name
     string getBinName(int binningType,int chargeType, int firstBin, int secondBin);
+    string getBinningName(int binningType, int chargeType);
     string getXAxisName(int binningType);
     void loadThetaBinnings();
  public:
@@ -173,6 +208,8 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     vector<float> binningMult;
     vector<float> binningThrust;
     vector<float> binningEmiss;
+    vector<float> binningSinDecTheta;
+    vector<float> binningCosDecTheta;
 
 
  protected:
@@ -192,7 +229,11 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     int hadOpenBin2;
     int thrustBin;
     int eMissBin;
+    int sinDecThetaBin1;
+    int sinDecThetaBin2;
 
+    int cosDecThetaBin1;
+    int cosDecThetaBin2;
 
     float hadronOpening1;
     float hadronOpening2;
@@ -210,6 +251,12 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     float qT;
     float thrust;
     float Emiss;
+    float sinDecTheta1;
+    float sinDecTheta2;
+    float cosDecTheta1;
+    float cosDecTheta2;
+
+    TH1D**** eventCounts;
 
 
     unsigned int minCounts;

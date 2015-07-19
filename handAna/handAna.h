@@ -47,7 +47,7 @@ public:
   int goodHadronB() const;
   // begin_run function
   void begin_run ( BelleEvent*, int* );
-
+  void findDStar(vector<Hep3Vector>& allPB, vector<int>& allPB_Class, vector<int>& allPB_Charge);
   void disp_stat ( const char* ){}
   void saveHistos( vector<Hep3Vector>& v_allParticlesBoosted, vector<Hep3Vector>& v_allParticlesNonBoosted);
   void saveTree();
@@ -60,6 +60,8 @@ public:
   void exitEvent();
   // histogram initialize
   void hist_def ( void );
+
+
 
   // event function
   void event ( BelleEvent*, int* );
@@ -75,6 +77,11 @@ public:
   int zNums[4];
   double smpl_;
   char rFileName[200];
+
+  TH1D* histoD0Spect;
+  TH1D* histoDStar;
+  TH1D* histoPiSlowMom;
+
 
   TH2D* thetaPhiLab;
   TH2D* thetaPhiCMS;
@@ -126,6 +133,8 @@ static int getBin(vector<float>& b1, float value)
   Ptype cKNeg;
 
 private:
+
+  int GetECLSector(double theta = -999.);
   //compute distance between decay vertices of quark and antiquark
   float getDecayDist();
   float getDecayDistK();

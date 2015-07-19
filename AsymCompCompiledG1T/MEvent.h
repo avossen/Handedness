@@ -11,6 +11,13 @@ class MEvent:public ReaderBase
 {
  public:
 
+
+  int D0Tag;
+  int DStarTag;
+
+  int runNr;
+  int evtNr;
+
   float Thrust;
   float E_miss;
   float thrustThetaCMS;
@@ -39,11 +46,15 @@ class MEvent:public ReaderBase
   const float upperThrustThetaCut;
   const float lowerThrustThetaCutCMS;
   const float upperThrustThetaCutCMS;
+
   const float thrustThetaCMSMaxProj;
   const float jetMaxCMSProj;
   const float jetMinCMSProj;
+  const float maxJetCMSTheta;
+  const float minJetCMSTheta;
 
-
+  const bool onlyDTagged;
+  const bool onlyDStarTagged;
 
 
   //hard cuts 1.2-1.6
@@ -52,7 +63,11 @@ class MEvent:public ReaderBase
   //changed from thetamax proj 0.3 and lower 1.2 , upper 1.9 (cms) to open
   //the non-cms values where 0.14159 and 2.5
   //1.35r is the old, 1.7
-  MEvent(TChain* chain, int mMCFlag=mcFlagNone):ReaderBase(mMCFlag),lowerThrustThetaCut(0),upperThrustThetaCut(3.7), thrustThetaCMSMaxProj(1.3), lowerThrustThetaCutCMS(0.0), upperThrustThetaCutCMS(4.9), maxMissingEnergy(2.0),jet1(1,0,0),jet2(1,0,0), minJetE(3.75),jetMaxCMSProj(100),jetMinCMSProj(0.0)
+  //max was 1.76, min: 1.38 for jet cms
+  //1.52 <-> 175 for thrust theta
+  //maxJetCMSTheta war 1.761593
+  /////  MEvent(TChain* chain, int mMCFlag=mcFlagNone):ReaderBase(mMCFlag),lowerThrustThetaCut(-1.52),upperThrustThetaCut(10.75), thrustThetaCMSMaxProj(1.3), lowerThrustThetaCutCMS(0.0), upperThrustThetaCutCMS(4.9), maxMissingEnergy(2.0),jet1(1,0,0),jet2(1,0,0), minJetE(3.75),jetMaxCMSProj(100),jetMinCMSProj(0.0),maxJetCMSTheta(1.75), minJetCMSTheta(1.38), onlyDTagged(false),onlyDStarTagged(false)
+  MEvent(TChain* chain, int mMCFlag=mcFlagNone):ReaderBase(mMCFlag),lowerThrustThetaCut(-1.52),upperThrustThetaCut(10.75), thrustThetaCMSMaxProj(1.3), lowerThrustThetaCutCMS(0.0), upperThrustThetaCutCMS(4.9), maxMissingEnergy(2.0),jet1(1,0,0),jet2(1,0,0), minJetE(3.75),jetMaxCMSProj(100),jetMinCMSProj(0.0),maxJetCMSTheta(1.75), minJetCMSTheta(1.38), onlyDTagged(false),onlyDStarTagged(false)
   {
     myChain=chain;
     if(chain)
@@ -60,6 +75,10 @@ class MEvent:public ReaderBase
 	branchPointers.push_back(&thrustThetaCMS);
 	if(mMCFlag!=mcFlagWoA)
 	  {
+	    branchPointersI.push_back(&runNr);
+	    branchPointersI.push_back(&evtNr);
+	    branchPointersI.push_back(&D0Tag);
+	    branchPointersI.push_back(&DStarTag);
 	    branchPointers.push_back(&jet1E);
 	    branchPointers.push_back(&jet2E);
 	    branchPointers.push_back(&jet1Phi);
@@ -80,7 +99,10 @@ class MEvent:public ReaderBase
 	else
 	  {
 	    branchNames.push_back("thrustTheta");
-
+	    branchNamesI.push_back("runNr");
+	    branchNamesI.push_back("eventNr");
+	    branchNamesI.push_back("D0Tag");
+	    branchNamesI.push_back("DStarTag");
 	    branchNames.push_back("jetE1"+addendum);
 	    branchNames.push_back("jetE2"+addendum);
 	    branchNames.push_back("jet1Phi"+addendum);
@@ -117,35 +139,74 @@ class MEvent:public ReaderBase
     cutEvent=false;
 
     if(jet1E< minJetE || jet2E< minJetE)
+      {
+	//	cout <<"cutting event " << evtNr <<" due to jet E : "<< jet1E <<" or " << jet2E <<endl;
       cutEvent=true;
+      }
     
+    if(onlyDTagged && D0Tag!=1)
+      cutEvent=true;
+    if(onlyDStarTagged && DStarTag!=1)
+      cutEvent=true;
+    //    if(!cutEvent)
+      //      cout <<"found DStar" <<endl;
+    //    cout <<"onlyDSTarTagged: "<< onlyDStarTagged <<" DStarTag: " << DStarTag <<" cut event" << cutEvent <<endl;
     //institute a cut against too much reconstructed energy...
     if(E_miss<-1)
+      {//cout <<" event " <<evtNr<< " emiss cut " <<endl;
       cutEvent=true;
+      }
     if(E_miss>maxMissingEnergy)
+      {
+	//	cout <<"event " << evtNr<< " second emiss cut " << E_miss<<endl;
       cutEvent=true;
+      }
     if(thrustThetaLab>upperThrustThetaCut)
-      cutEvent=true;
+      {
+	//	cout <<"thrustThetaLab cut event " << evtNr <<" thrustTHetaLab: " << thrustThetaLab <<endl;
+	cutEvent=true;
+      }
     if(thrustThetaLab<lowerThrustThetaCut)
-      cutEvent=true;
+      {
+	//	cout <<"lower cut event " << evtNr <<" thrustTHetaLab: " << thrustThetaLab <<endl;
+	cutEvent=true;
+      }
     if(thrustThetaCMS>upperThrustThetaCutCMS)
+      {
+	//	cout <<"upper theta cms cut event " << evtNr <<" thrustTHetaCMS: " << thrustThetaCMS <<endl;
       cutEvent=true;
+      }
     if(thrustThetaCMS<lowerThrustThetaCutCMS)
+      {
+	//	cout <<"lower theta cms cut event " << evtNr <<" thrustTHetaCMS: " << thrustThetaCMS <<endl;
       cutEvent=true;
+      }
 
     if(fabs(cos(thrustThetaCMS))>thrustThetaCMSMaxProj)
-      cutEvent=true;
+      {
+	//	cout <<"theta cms proj cut event " << evtNr <<" thrustTHetaCMSProj: " << fabs(cos(thrustThetaCMS)) <<endl;
+	cutEvent=true;
+      }
     //    cout <<"mcFlag: "<< mMCFlag<<endl;
     //        cout <<"angle between jets: "<< jet1.Angle(jet2)<<" jet1 phi/theta: " << jet1Phi <<"/ " << jet1Theta <<" jet2: " << jet2Phi <<"/ " << jet2Theta<<endl;
     //	cout <<"jet E1: "<< jet1E <<" jet2 E: " << jet2E<<endl;
-    if(jet1.Angle(jet2)>1.1)
-      cutEvent=true;
+
+    //    if(jet1.Angle(jet2)>0.3)
+    //    if(jet1.Angle(jet2)>0.3)
+    //      cutEvent=true;
     //was 1.34 & 1.8
-    if(jet1.Theta()<1.38 || jet1.Theta()>1.75)
-      cutEvent=true;
-    if(jet2.Theta()<1.38 || jet2.Theta()>1.75)
+    if(jet1.Theta()<minJetCMSTheta || jet1.Theta()>maxJetCMSTheta)
+      {
+
+	//	cout <<"event : " << evtNr <<" jet1 cms theta cuts: " << jet1.Theta() <<endl;
       cutEvent=true;
 
+      }
+    if(jet2.Theta()<minJetCMSTheta || jet2.Theta()>maxJetCMSTheta)
+      {
+	//	cout <<"event : " << evtNr <<" jet2 cms theta cuts: " << jet2.Theta() <<endl;
+      cutEvent=true;
+      }
     transProj=sin(thetaEThrust)*sin(thetaEThrust)/(1+cos(thetaEThrust)*cos(thetaEThrust));
     longProj=sqrt(1-transProj*transProj);
   }

@@ -641,9 +641,12 @@ public:
       dataF.push_back(gi.thetaEThrust);
       dataI.push_back(gi.numQuarks);
 #endif
-
+      dataI.push_back(kinematics::runNr);
+      dataI.push_back(kinematics::evtNr);
       dataI.push_back(kinematics::jetNumParts1);
       dataI.push_back(kinematics::jetNumParts2);
+      dataI.push_back(kinematics::D0Tag);
+      dataI.push_back(kinematics::DStarTag);
 
     };
 

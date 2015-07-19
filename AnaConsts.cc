@@ -103,6 +103,10 @@ namespace kinematics
   int evtNr;
   int runNr;
 
+  int D0Tag;
+  int DStarTag;
+  float fastPionZ;
+
   float E_miss;
   double eler=3.499218;//energies of l, h beam
   double eher(7.998213);

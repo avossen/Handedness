@@ -77,13 +77,22 @@ void loadBinning(vector<float>* binningM, vector<float>* binningZ, vector<float>
 
 
   ////// ------1D Paper Binning----///
-  binningZ[PiPi].push_back(0.3);
-  binningZ[PiPi].push_back(0.4);
+   binningZ[PiPi].push_back(0.3);
+   binningZ[PiPi].push_back(0.4);
   binningZ[PiPi].push_back(0.5);
-  binningZ[PiPi].push_back(0.6);
+   binningZ[PiPi].push_back(0.6);
     binningZ[PiPi].push_back(0.75);
-  binningZ[PiPi].push_back(1.1);
+   binningZ[PiPi].push_back(1.1);
 
+ //  binningZ[PiPi].push_back(0.28);
+  //  binningZ[PiPi].push_back(0.35);
+ //  binningZ[PiPi].push_back(0.42);
+ //  binningZ[PiPi].push_back(0.5);
+ //  binningZ[PiPi].push_back(0.57);
+ //  binningZ[PiPi].push_back(0.65);
+ //  binningZ[PiPi].push_back(0.72);
+ //  binningZ[PiPi].push_back(0.82);
+ //  binningZ[PiPi].push_back(1.1);
   ////--------------
 
 

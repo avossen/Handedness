@@ -4,12 +4,30 @@
 void MultiFitter::loadThetaBinnings()
 {
 
+  binningSinDecTheta.push_back(0.8);
+  binningSinDecTheta.push_back(0.85);
+  binningSinDecTheta.push_back(0.9);
+  binningSinDecTheta.push_back(0.95);
+  binningSinDecTheta.push_back(1.95);
+
+  binningCosDecTheta.push_back(-0.7);
+  binningCosDecTheta.push_back(-0.3);
+  binningCosDecTheta.push_back(0.0);
+  binningCosDecTheta.push_back(0.3);
+  binningCosDecTheta.push_back(0.7);
+  binningCosDecTheta.push_back(1.7);
+
+
+
   //    binningLabTheta.push_back(0.9);
   //  binningLabTheta.push_back(1.1);
-  binningLabTheta.push_back(1.3);
- binningLabTheta.push_back(1.45);
+  //  binningLabTheta.push_back(1.3);
+  // binningLabTheta.push_back(1.45);
+  // binningLabTheta.push_back(1.53);
  binningLabTheta.push_back(1.55);
+ binningLabTheta.push_back(1.6);
   binningLabTheta.push_back(1.7);
+  binningLabTheta.push_back(1.75);
       binningLabTheta.push_back(1.85);
   //  binningLabTheta.push_back(2.5);
   binningLabTheta.push_back(8.0);
@@ -109,7 +127,7 @@ void MultiFitter::getIntAsymmetry(float a[3], float ea[3],int binningType,int ch
       for(int j=0;j<maxKinMap[binningType].second;j++)
 	{
 	  int resIdx=getResIdx(binningType,chargeType,i,j);
-	  cout <<"looking at index:" << resIdx<<endl;
+	  //	  cout <<"looking at index:" << resIdx<<endl;
 	  mYA1[j]=m_fitResults[resIdx].A1;
 	  mYA2[j]=m_fitResults[resIdx].A2;
 	  mYA3[j]=m_fitResults[resIdx].A3;
@@ -182,17 +200,17 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
   if(mPlotType==plotType_DR)
     sprintf(buffer,"%sDR",buffer);
 
-  cout <<"saving graph for " << binName <<" buffer; " << buffer<<endl;
+  //  cout <<"saving graph for " << binName <<" buffer; " << buffer<<endl;
   for(int i=0;i<maxKinMap[binningType].first;i++)
     {
       for(int j=0;j<maxKinMap[binningType].second;j++)
 	{
 	  int resIdx=getResIdx(binningType,chargeType,i,j);
-	  cout <<"looking at index:" << resIdx<<endl;
+	  //	  cout <<"looking at index:" << resIdx<<endl;
 	  mX[j]=m_fitResults[resIdx].meanKinBin2;
 	  if((j>0)&& mX[j]<=mX[j-1])
 	    {
-	      cout <<"MultiFitter::saveGraph, wanting to set X["<<j<<"] to: " << mX[j] <<" but the one before is: " << mX[j-1] <<endl;
+	      //	      cout <<"MultiFitter::saveGraph, wanting to set X["<<j<<"] to: " << mX[j] <<" but the one before is: " << mX[j-1] <<endl;
 	      mX[j]=mX[j-1]+0.1;
 	    }
 	  //	  cout <<"setting x: " << mX[j] <<endl;
@@ -203,7 +221,7 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
 	  mYA1Err[j]=m_fitResults[resIdx].eA1;
 	  mYA2Err[j]=m_fitResults[resIdx].eA2;
 	  mYA3Err[j]=m_fitResults[resIdx].eA3;
-	  cout <<"x: " << mX[j]<< "+-"<<mXErr[j]<<" a1: " << mYA1[j] << " a2: " << mYA2[j] <<" a2: " << mYA3[j] <<" a1 err: " << mYA1Err[j] << " a2 err: " << mYA2Err[j] <<" a3 err: " << mYA3Err[j] <<endl;
+	  //	  cout <<"x: " << mX[j]<< "+-"<<mXErr[j]<<" a1: " << mYA1[j] << " a2: " << mYA2[j] <<" a2: " << mYA3[j] <<" a1 err: " << mYA1Err[j] << " a2 err: " << mYA2Err[j] <<" a3 err: " << mYA3Err[j] <<endl;
 	  //	  cout <<"y: " << mY[j] << ", " << mYErr[j] <<endl;
 	}
 
@@ -214,7 +232,7 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
       sprintf(buffer1,"%s_Iff_%s_bin%d",nameAddition.c_str(),buffer,i);
       sprintf(buffer2,"%s_Handedness_%s_bin%d",nameAddition.c_str(),buffer,i);
       sprintf(buffer3,"%s_G1T_%s_bin%d",nameAddition.c_str(),buffer,i);
-      cout <<"set name: " << buffer1 <<" buffer: "<< buffer << endl;
+      //      cout <<"set name: " << buffer1 <<" buffer: "<< buffer << endl;
       graphA1.SetName(buffer1);
       graphA1.SetTitle(buffer1);
       graphA1.GetYaxis()->SetTitle("A^{cos(#Phi_{1}+#Phi_{2})}");
@@ -225,11 +243,11 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
       graphA2.GetXaxis()->SetTitle(getXAxisName(binningType).c_str());
       graphA3.SetName(buffer3);
       graphA3.SetTitle(buffer3);
-      cout <<"3=+-" <<endl;
+      //      cout <<"3=+-" <<endl;
       graphA3.GetYaxis()->SetTitle("A^{cos(2(#Phi_{1}-#Phi_{2}))}");
       graphA3.GetXaxis()->SetTitle(getXAxisName(binningType).c_str());
 
-      cout <<"4" <<endl;
+      //      cout <<"4" <<endl;
       rFile.cd("graphs");
       graphA1.Write();
       graphA2.Write();
@@ -247,7 +265,11 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
 
 void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero)
 {
-  //    cout <<"filling with " << hq->numHadQuads << " quads " << endl;
+  /////  cout <<"---" <<endl;
+
+
+  //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
+  //     cout <<"filling with " << hq->numHadQuads << " quads " << endl;
   //needed for the mean computation...
   this->labTheta=event.thrustThetaLab;
   this->kinFactor=event.transProj;
@@ -277,12 +299,12 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
     {
       if(hq->hp1.cut[i] || hq->hp2.cut[i])
 	{
-	  //	  	  cout <<"hadron pair cut" <<endl;
+	  //	  cout <<"hadron pair cut" <<endl;
 	  continue;
 	}
       else
 	{
-	  //	  cout <<"hadron pair survived " <<endl;
+	  //	  	  cout <<"hadron pair survived " <<endl;
 	}
 
       int chargeBin1=hq->hp1.chargeType[i];
@@ -347,12 +369,33 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       eMissBin=getBin(binningEmiss,event.E_miss);
       qTBin=getBin(binningQt,qT);
 
+      //      cout <<"theta1 : " << hq->hp1.decayTheta[i] <<" theta2: "<< hq->hp2.decayTheta[i]<<endl;
+      sinDecTheta1=sin(hq->hp1.decayTheta[i]);
+      sinDecTheta2=sin(hq->hp2.decayTheta[i]);
+      sinDecThetaBin1=getBin(binningSinDecTheta,sinDecTheta1);
+      sinDecThetaBin2=getBin(binningSinDecTheta,sinDecTheta2);
+
+      cosDecTheta1=cos(hq->hp1.decayTheta[i]);
+      cosDecTheta2=cos(hq->hp2.decayTheta[i]);
+      cosDecThetaBin1=getBin(binningCosDecTheta,cosDecTheta1);
+      cosDecThetaBin2=getBin(binningCosDecTheta,cosDecTheta2);
+
+      //      cout <<" fitter " << nameAddition <<endl;
+      //      cout <<"z["<<i <<"] : "<< hq->hp1.z[i]<<" z2: "<< hq->hp2.z[i]<<endl;
+
+      //      cout <<"sinDecTheta1 : "<< sinDecTheta1 <<" bin: "<< sinDecThetaBin1 <<endl;
+      //      cout <<"sinDecTheta1 : "<< sinDecTheta2 <<" bin: "<< sinDecThetaBin2 <<endl;
       hadOpenBin1=getBin(binningHadOpen,hq->hp1.hadOpening[i]);
       hadOpenBin2=getBin(binningHadOpen,hq->hp2.hadOpening[i]);
 
       hadronOpening1=hq->hp1.hadOpening[i];
       hadronOpening2=hq->hp2.hadOpening[i];
+      
 
+
+
+      //      cout <<" theta: "<< hq->hp1.decayTheta[i] << " i: "<< i << "sinDecTheta1: "<< sinDecTheta1 <<" bin " << sinDecThetaBin1 <<endl;
+      //      cout <<" hadOpen: "<< hq->hp1.hadOpening[i] << " bin " << hadOpenBin1 <<endl;
 
       zbin1=getBin(binningZ[hq->hp1.particleType[i]],hq->hp1.z[i]);
       zbin2=getBin(binningZ[hq->hp2.particleType[i]],hq->hp2.z[i]);
@@ -360,6 +403,16 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       mbin1=getBin(binningM[hq->hp1.particleType[i]],hq->hp1.mass[i]);
       //      cout <<" bin: "<< mbin1 <<endl;
       mbin2=getBin(binningM[hq->hp2.particleType[i]],hq->hp2.mass[i]);
+
+  //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
+      (*xCheckEventLists[0][mbin1][mbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i];
+      (*xCheckEventLists[0][mbin1][mbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl;
+
+
+      (*xCheckEventLists[1][zbin1][zbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i];
+      (*xCheckEventLists[1][zbin1][zbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl;
+
+
 
       //                  cout <<"got from hp1: " << hq->hp1.z[i]<< " m: " << hq->hp1.mass[i] <<" from hp2 z: " << hq->hp2.z[i]<<" mass: "<< hq->hp2.mass[i]<<endx1l;
       //            cout <<"got zbin1: " << zbin1 <<" zbin2: " << zbin2 << " mbin1: " << mbin1 << " mbin2: " << mbin2<<  " labThetaBin: " << labThetaBin<< " kinBin: " << kinFactorBin <<endl;
@@ -374,6 +427,30 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       //            cout << "phiRsum: " << hq->phiRSum[i] << " summed separately: " << hq->hp1.phiR[i]+hq->hp2.phiR[i] << " normalzied: " <<ang <<endl;
 
       //               cout <<"angle bins: " << phiR1Bin <<" and " << phiR2Bin <<endl;
+      double mPhi1=phi1;
+      double mPhi2=phi2;
+
+      double theta1=event.jet1Theta;
+      double theta2=event.jet2Theta;
+
+      if(mPhi1>TMath::Pi())
+	mPhi1-=2*TMath::Pi();
+      if(mPhi2>TMath::Pi())
+	mPhi2-=2*TMath::Pi();
+      if(theta1>TMath::Pi())
+	theta1-=2*TMath::Pi();
+      if(theta2>TMath::Pi())
+	theta2-=2*TMath::Pi();
+
+      ///////////xcheck
+      //          cout <<event.runNr <<" "<<event.evtNr <<" "<<hq->hp1.z[i]  <<" " << hq->hp2.z[i] << " " <<hq->hp1.mass[i] <<" " << hq->hp2.mass[i] << " ";
+	   
+      //            cout <<theta1 << " " << theta2 << " " <<mPhi1 <<" " << mPhi2 <<endl;
+
+   
+      ///////end xcheck
+
+
 
       for(int bt=binType_m_m; bt<binType_end;bt++)
 	{
@@ -389,10 +466,10 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 	      if(bt==binType_ThrustThetaPhi || bt==binType_ThrustPhiTheta)
 		continue;
 	      //	      cout<<" hadOpen 1: " << hadronOpen1<<" and 2: " << hadronOpen2
-	      cout <<"bt: " << bt << " chargeBin: " << chargeBin << "firstBin: " << firstBin <<" second " << secondBin <<" phiR1bin: "<< phiR1Bin << " phiR2Bin: " << phiR2Bin << " phiRDiffBin: " << phiRDiffBin <<" phiRTwoDiffBin "<< phiRTwoDiffBin << " phiRDiff: " << hq->phiRDiff[i] <<" phiRTwo: " << hq->twoPhiRDiff[i]<< endl;
-	      cout <<"phir1: " << hq->hp1.phiR[i] << " phir2: " << hq->hp2.phiR[i] << " phirsum: " << hq->phiRSum[i] <<" phiR1: " << hq->phiR1[i] <<endl;
-	      cout <<"thrust theta: " <<this->cmsThrustTheta <<" thrust phi: "<< this->cmsThrustPhi<<endl;
-	      cout <<" z: " << this->z1 <<" z2: " << this->z2 << " m1: " << this->m1 << " m2: "<< this->m2 <<endl;
+	      //	      cout <<"bt: " << bt << " chargeBin: " << chargeBin << "firstBin: " << firstBin <<" second " << secondBin <<" phiR1bin: "<< phiR1Bin << " phiR2Bin: " << phiR2Bin << " phiRDiffBin: " << phiRDiffBin <<" phiRTwoDiffBin "<< phiRTwoDiffBin << " phiRDiff: " << hq->phiRDiff[i] <<" phiRTwo: " << hq->twoPhiRDiff[i]<< endl;
+	      //	      cout <<"phir1: " << hq->hp1.phiR[i] << " phir2: " << hq->hp2.phiR[i] << " phirsum: " << hq->phiRSum[i] <<" phiR1: " << hq->phiR1[i] <<endl;
+	      //	      cout <<"thrust theta: " <<this->cmsThrustTheta <<" thrust phi: "<< this->cmsThrustPhi<<endl;
+	      //	      cout <<" z: " << this->z1 <<" z2: " << this->z2 << " m1: " << this->m1 << " m2: "<< this->m2 <<endl;
 	      continue;
 	    }
 
@@ -401,6 +478,9 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 	      //	      cout <<"adding to pi0 " <<endl;
 	      //      	      cout <<"bt: " << bt << " chargeBin: " << chargeBin << "firstBin: " << firstBin <<" second " << secondBin <<" phiR1bin: "<< phiR1Bin << " phiR2Bin: " << phiR2Bin <<endl;
 	    }
+
+	  //	  cout <<"filling bt: "<< bt <<" chargeBin: " << chargeBin <<" sec bin : " << secondBin <<endl;
+	  eventCounts[bt][chargeBin][firstBin]->Fill(secondBin);
 
 	  counts[bt][chargeBin][firstBin][secondBin][phiR1Bin][phiR2Bin]+=weight;
 	  countsSumR[bt][chargeBin][firstBin][secondBin][phiRSumBin]+=weight;
@@ -524,6 +604,17 @@ void MultiFitter::setBinningMap()
 	  meanMap.push_back(pair<float*, float*>(&(this->Emiss),&(this->Emiss) ));
 	  maxKinMap.push_back(pair<int,int>(1,binningEmiss.size()));
 	  break;
+	case binType_sinDecThetaOnly:
+	  binningMap.push_back(pair<int*,int*> (&(this->zeroBin),&(this->sinDecThetaBin1)));
+	  meanMap.push_back(pair<float*,float*>(&(this->sinDecTheta1),&(this->sinDecTheta1)));
+	  maxKinMap.push_back(pair<int,int>(1,binningSinDecTheta.size()));
+	  break;
+
+	case binType_cosDecThetaOnly:
+	  binningMap.push_back(pair<int*,int*> (&(this->zeroBin),&(this->cosDecThetaBin1)));
+	  meanMap.push_back(pair<float*,float*>(&(this->cosDecTheta1),&(this->cosDecTheta1)));
+	  maxKinMap.push_back(pair<int,int>(1,binningCosDecTheta.size()));
+	  break;
 
 	default:
 	  cout <<"binning not recognized!!"<<endl;
@@ -582,12 +673,12 @@ void MultiFitter::doDRFits(double** locCounts, double& As, double& AsErr, string
 	    mX[k]=binningAng[i]+binningAng[k];
 
 	  // normalizeAngle(mX[k]);
-	  cout <<" setting mX["<<k<<"] to " << mX[k]<<endl;
+	  //	  cout <<" setting mX["<<k<<"] to " << mX[k]<<endl;
 	}
       mFit=new TF1(fitName,"([0]*cos(x)+[1])",mX[0]-offset,mX[numAngBins/2-1]+offset);
       mFit->SetParNames("Amp");
       mFit->SetParameters(0,0.0);
-      cout <<" set fit range to  " << mX[0]-offset <<" to : "<<mX[numAngBins/2-1]+offset<<endl;
+      //      cout <<" set fit range to  " << mX[0]-offset <<" to : "<<mX[numAngBins/2-1]+offset<<endl;
       for(int j=0;j<numAngBins;j++)
 	{
 	  //only true for phi1-phi2, spin flips by rotating by pi
@@ -603,11 +694,11 @@ void MultiFitter::doDRFits(double** locCounts, double& As, double& AsErr, string
 
 	  double C=countsDown[iAng];
 	  double D=countsUp[iAng+numAngBins/2];
-	  cout <<"A: " << A <<" b: " << B <<" C: "<< C << "  D: " << D <<endl;
+	  //	  cout <<"A: " << A <<" b: " << B <<" C: "<< C << "  D: " << D <<endl;
 
-	  cout <<"computing my" <<endl;
+	  //	  cout <<"computing my" <<endl;
 	  mY[iAng]=(sqrt(A*B)-sqrt(C*D))/(sqrt(A*B)+sqrt(C*D));
-	  cout <<"y now: "<< mY[iAng]<<endl;
+	  //	  cout <<"y now: "<< mY[iAng]<<endl;
 
 	  float n1Err=sqrt((float)countsUp[iAng]);
 	  float n2Err=sqrt((float)countsDown[iAng]);
@@ -637,7 +728,7 @@ void MultiFitter::doDRFits(double** locCounts, double& As, double& AsErr, string
 	      double superErr=aDev*aDev+bDev*bDev+cDev*cDev+dDev*dDev;
 	      superErr=sqrt(superErr);
 	      mYErr[iAng]=superErr;
-	      cout <<"err: "<< superErr<<endl;
+	      //	      cout <<"err: "<< superErr<<endl;
 	    }
 	  else
 	    {
@@ -661,17 +752,17 @@ void MultiFitter::doDRFits(double** locCounts, double& As, double& AsErr, string
       TGraphErrors* tg=new TGraphErrors(numAngBins/2,mX,mY,mXErr,mYErr);
       tg->SetName(buffer);
       tg->Draw("AP*");
-      tg->Fit(fitName);
+      tg->Fit(fitName,"q");
       rFile.cd();
       rFile.cd("RFitDHistos");
       tg->Write();
       rFile.cd();
-      cout <<"DR fit chi2/ndf: " << mFit->GetChisquare()/mFit->GetNDF() <<endl;
+      //      cout <<"DR fit chi2/ndf: " << mFit->GetChisquare()/mFit->GetNDF() <<endl;
       Asymmetry=mFit->GetParameter(0);
       asymmetries[i]=Asymmetry;
       AsError=mFit->GetParError(0);
       asymmetriesErr[i]=AsError;
-      cout <<"asymmetry: " << Asymmetry << " error: " << AsError << endl;
+      //      cout <<"asymmetry: " << Asymmetry << " error: " << AsError << endl;
       delete tg;
       delete mFit;
     }
@@ -747,7 +838,7 @@ void MultiFitter::doDRFitsG1T(double** locCounts, double& As, double& AsErr, str
 	  //	  normalizeAngle(mX[k]);
 	}
       mFit=new TF1(fitName,"([0]*cos(2*x)+[1])",mX[0]-offset,mX[numAngBins/2-1]+offset);
-      cout <<" set fit range to  " << mX[0]-offset <<" to : "<<mX[numAngBins/2-1]+offset<<endl;
+      //      cout <<" set fit range to  " << mX[0]-offset <<" to : "<<mX[numAngBins/2-1]+offset<<endl;
 
       mFit->SetParNames("Amp");
       mFit->SetParameters(0,0.0);
@@ -774,10 +865,10 @@ void MultiFitter::doDRFitsG1T(double** locCounts, double& As, double& AsErr, str
 	  double C=countsDown[iAng];
 	  double D=countsUp[binOffset];
 
-	  cout <<"A: " << A <<" b: " << B <<" C: "<< C << "  D: " << D <<endl;
-	  cout <<"computing my" <<endl;
+	  //	  cout <<"A: " << A <<" b: " << B <<" C: "<< C << "  D: " << D <<endl;
+	  //	  cout <<"computing my" <<endl;
 	  mY[iAng]=(sqrt(A*B)-sqrt(C*D))/(sqrt(A*B)+sqrt(C*D));
-	  cout <<"y now: "<< mY[iAng]<<endl;
+	  //	  cout <<"y now: "<< mY[iAng]<<endl;
 
 	  if(countsUp[iAng]>0&& countsDown[iAng]>0 && countsUp[iAng+numAngBins/2]>0 && countsDown[iAng+numAngBins/2]>0)
 	    {
@@ -814,17 +905,17 @@ void MultiFitter::doDRFitsG1T(double** locCounts, double& As, double& AsErr, str
       TGraphErrors* tg=new TGraphErrors(numAngBins/2,mX,mY,mXErr,mYErr);
       tg->SetName(buffer);
       tg->Draw("AP*");
-      tg->Fit(fitName);
+      tg->Fit(fitName,"q");
       rFile.cd();
       rFile.cd("RFitDHistos");
       tg->Write();
       rFile.cd();
-      cout <<"DR fit g1t chi2/ndf: " << mFit->GetChisquare()/mFit->GetNDF() <<endl;
+      //      cout <<"DR fit g1t chi2/ndf: " << mFit->GetChisquare()/mFit->GetNDF() <<endl;
       Asymmetry=mFit->GetParameter(0);
       asymmetries[i]=Asymmetry;
       AsError=mFit->GetParError(0);
       asymmetriesErr[i]=AsError;
-      cout <<"asymmetry: " << Asymmetry << " error: " << AsError << endl;
+      //      cout <<"asymmetry: " << Asymmetry << " error: " << AsError << endl;
       delete tg;
       delete mFit;
     }
@@ -868,7 +959,7 @@ void MultiFitter::doDRFitsG1T(double** locCounts, double& As, double& AsErr, str
 
 void MultiFitter::doFits(MultiFitter* mfMix)
 {
-  cout <<"doing fits! " <<endl;
+  //  cout <<"doing fits! " <<endl;
 
   ///these are the raw counts
   double** localCounts;
@@ -1092,29 +1183,29 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		  //		  		  TF1 mDiffRFit("diffRFit","[0]*([1]*cos(x)+1)",0,2*TMath::Pi());
 		  //		  		  TF1 mTwoDiffRFit("twoDiffRFit","[0]*([1]*cos(x)+1)",0,2*TMath::Pi());
 
-		  TF2 mFit("fit","[0]*cos(x+y)+[1]*cos(x-y)+[2]*cos(2* (x-y))+1",0,2*TMath::Pi(),0,2*TMath::Pi());
+		  TF2 mFit("fit","[0]*cos(x+y)+[1]*cos(4*(x-y))+[2]*cos(2* (x-y))+1",0,2*TMath::Pi(),0,2*TMath::Pi());
 		  TF1 mSumRFit("sumRFit","[0]*cos(x)+1",0,2*TMath::Pi());
-		  TF1 mDiffRFit("diffRFit","[0]*cos(x)+1",0,2*TMath::Pi());
+		  TF1 mDiffRFit("diffRFit","[0]*cos(4*x)+1",0,2*TMath::Pi());
 		  TF1 mTwoDiffRFit("twoDiffRFit","[0]*cos(x)+1",0,2*TMath::Pi());
 
 		  //
 
 		  mSumRFit.SetParameters(f1params);
 		  mFit.SetParameters(f2params);
-		  myHisto.Fit("fit");
-		  mySumHisto.Fit("sumRFit");
-		  cout <<"compare 1D A1 fit res: " << mSumRFit.GetParameter(0) << " +- " << mSumRFit.GetParError(0) <<" to: "<< mFit.GetParameter(0) << " +- " << mFit.GetParError(0)<<endl;
+		  myHisto.Fit("fit","q");
+		  mySumHisto.Fit("sumRFit","q");
+		  //		  cout <<"compare 1D A1 fit res: " << mSumRFit.GetParameter(0) << " +- " << mSumRFit.GetParError(0) <<" to: "<< mFit.GetParameter(0) << " +- " << mFit.GetParError(0)<<endl;
 
 
 		  //fit with same function
 		  hOneDVsTwoDA1->Fill((mSumRFit.GetParameter(0)-mFit.GetParameter(0))/(0.5*(mFit.GetParError(0)+mSumRFit.GetParError(0))));
-		  myDiffHisto.Fit("diffRFit");
-		  cout <<"compare 1D fit A2 res: " << mDiffRFit.GetParameter(0) << " +- " << mDiffRFit.GetParError(0) <<" to: "<< mFit.GetParameter(1) << " +- " << mFit.GetParError(1)<<endl;
+		  myDiffHisto.Fit("diffRFit","q");
+		  //		  cout <<"compare 1D fit A2 res: " << mDiffRFit.GetParameter(0) << " +- " << mDiffRFit.GetParError(0) <<" to: "<< mFit.GetParameter(1) << " +- " << mFit.GetParError(1)<<endl;
 
 
 		  hOneDVsTwoDA2->Fill((mSumRFit.GetParameter(0)-mFit.GetParameter(1))/(0.5*(mFit.GetParError(1)+mSumRFit.GetParError(0))));
-		  myTwoDiffHisto.Fit("twoDiffRFit");
-		  cout <<"compare 1D fit A3 res: " << mTwoDiffRFit.GetParameter(0) << " +- " << mTwoDiffRFit.GetParError(0) <<" to: "<< mFit.GetParameter(2) << " +- " << mFit.GetParError(2)<<endl;
+		  myTwoDiffHisto.Fit("twoDiffRFit","q");
+		  //		  cout <<"compare 1D fit A3 res: " << mTwoDiffRFit.GetParameter(0) << " +- " << mTwoDiffRFit.GetParError(0) <<" to: "<< mFit.GetParameter(2) << " +- " << mFit.GetParError(2)<<endl;
 
 		  hOneDVsTwoDA3->Fill((mSumRFit.GetParameter(0)-mFit.GetParameter(2))/(0.5*(mFit.GetParError(2)+mSumRFit.GetParError(0))));
 		  myHisto.SetName((string("histo_")+getBinName(bt,chargeBin,firstBin,secondBin)).c_str());
@@ -1194,9 +1285,15 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 
 		  hChi2OverNdf->Fill(fitResults[resIdx].chi2OverNdf);
 		}
+	      eventCounts[bt][chargeBin][firstBin]->Write();
 	    }
+
+
+
 	}
     }
+
+
 
 };
 
@@ -1242,6 +1339,13 @@ string MultiFitter::getXAxisName(int binningType)
     case binType_EmissOnly:
       ret+="E_{Miss} [GeV]";
       break;
+    case binType_sinDecThetaOnly:
+      ret+="sin(#theta)";
+      break;
+
+    case binType_cosDecThetaOnly:
+      ret+="cos(#theta)";
+      break;
 
     case binType_kinFactOnly:
       ret+="transverse pol proj.";
@@ -1267,10 +1371,10 @@ string MultiFitter::getXAxisName(int binningType)
   return ret;
 }
 
-//give negative values for first or second bin if they should not be part of the name
-string MultiFitter::getBinName(int binningType,int chargeType, int firstBin, int secondBin)
+
+string MultiFitter::getBinningName(int binningType, int chargeType)
 {
-  string ret;
+ string ret;
   switch(binningType)
     {
     case binType_m_m:
@@ -1309,7 +1413,12 @@ string MultiFitter::getBinName(int binningType,int chargeType, int firstBin, int
     case binType_ThrustOnly:
       ret+="onlyThrust";
       break;
-
+    case binType_sinDecThetaOnly:
+      ret+="onlySinDecTheta";
+      break;
+    case binType_cosDecThetaOnly:
+      ret+="onlyCosDecTheta";
+      break;
     case binType_kinFactOnly:
       ret+="onlyTransvProj_";
       break;
@@ -1334,25 +1443,35 @@ string MultiFitter::getBinName(int binningType,int chargeType, int firstBin, int
   switch(chargeType)
     {
     case quadPN:
-      ret+="PosNeg_";
+      ret+="PosNeg";
       break;
     case quadPZ_ZN:
-      ret+="PZ_ZN_";
+      ret+="PZ_ZN";
       break;
     case quadPN_PZ:
-      ret+="PN_PZ_";
+      ret+="PN_PZ";
       break;
     case quadPN_ZN:
-      ret+="PN_ZN_";
+      ret+="PN_ZN";
       break;
     case quadPP_NN:
-      ret+="PP_NN_";
+      ret+="PP_NN";
       break;
 
     default:
       break;
       
     }
+
+  return ret;
+}
+
+//give negative values for first or second bin if they should not be part of the name
+string MultiFitter::getBinName(int binningType,int chargeType, int firstBin, int secondBin)
+{
+  string ret;
+  ret+=getBinningName(binningType, chargeType);
+  ret+="_";
 
   char buffer[10];
   sprintf(buffer,"%d",firstBin);
@@ -1429,7 +1548,7 @@ void MultiFitter::saveAsymmetries(plotType mPlotType)
 
 void MultiFitter::reorder(float* mX, float* mY, float* mYErr, int numBins)
 {
-  cout <<"reordering " <<endl;
+  //  cout <<"reordering " <<endl;
   float tmpX[100];
   float tmpY[100];
   float tmpEY[100];
@@ -1454,7 +1573,7 @@ void MultiFitter::reorder(float* mX, float* mY, float* mYErr, int numBins)
       mX[i-firstXBin]=tmpX[counter];
       mY[i-firstXBin]=tmpY[counter];
       mYErr[i-firstXBin]=tmpEY[counter];
-      cout <<"mX["<<i-firstXBin <<"] from tmpX["<<counter<<"] is " <<  mX[i-firstXBin]<<endl;
+      //      cout <<"mX["<<i-firstXBin <<"] from tmpX["<<counter<<"] is " <<  mX[i-firstXBin]<<endl;
     }
 }
 
@@ -1470,6 +1589,38 @@ bool MultiFitter::checkMinCounts(double** counts)
     }
   return true;
 }
-const int MultiFitter::numKinematicBinning=17;
+
+void MultiFitter::openXCheckFiles()
+{
+
+  int binningNames[2];
+  string binningString[2];
+  binningNames[0]=binType_m_m;
+  binningNames[1]=binType_m_m;
+
+  binningString[0]=string("m_m_");
+  binningString[1]=string("z_z_");
+
+  //let's not do this for every binning, just m_m and z_z
+  xCheckEventLists=new ofstream***[2];
+
+  for(int bN=0;bN<2;bN++)
+    {
+      int currentBinning=binningNames[bN];
+      xCheckEventLists[bN]=new ofstream**[maxKinMap[currentBinning].first];
+
+      for(int iK=0;iK<=maxKinMap[currentBinning].first;iK++)
+	{
+	  xCheckEventLists[bN][iK]=new ofstream*[maxKinMap[currentBinning].second];
+	  for(int iK2=0;iK2<=maxKinMap[currentBinning].second;iK2++)
+	    {
+	      stringstream filename;
+	      filename <<binningString[bN] <<"_bin_"<<iK<<"_"<<iK2;
+	      xCheckEventLists[bN][iK][iK2]=new ofstream(filename.str().c_str());
+	    }
+	}
+    }
+}
+const int MultiFitter::numKinematicBinning=19;
 const int MultiFitter::numParticles=5;
 const int MultiFitter::NumCharges=7;
