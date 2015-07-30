@@ -132,6 +132,26 @@ static int getBin(vector<float>& b1, float value)
   Ptype cKPlus;
   Ptype cKNeg;
 
+ protected:
+    vector<Particle*> chargedPiCandidates;
+    vector<Particle*> chargedKCandidates;
+    vector<Particle*> pi0Candidates;
+    vector<Particle*> KsCandidates;
+    vector<Particle*> leptonCandidates;
+    vector<Particle*> otherChargedTracks;
+    vector<Particle*> D0Candidates;
+    vector<Particle*> chargedDCandidates;
+    vector<Particle*> DStarCandidates;
+
+
+
+    void reconstructD0();
+    void reconstructChargedD();
+    void reconstructDStar();
+    unsigned doKmFit(Particle &p, double& conflevel, int debug, double mass=0);
+    unsigned doKmVtxFit(Particle &p, double& conflevel, int debug);
+    unsigned doKmVtxFit2(Particle &p, double& conflevel, int debug, double mass=0);
+
 private:
 
   int GetECLSector(double theta = -999.);

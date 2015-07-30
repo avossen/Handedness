@@ -148,7 +148,7 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     //
     //    void setFitReuslt();
     void openXCheckFiles();
-    void addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero=false);
+    void addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero=false, bool print=false);
     void setBinningMap();
     void doFits(MultiFitter* mfMix=0);
     void doDRFits(double** locCounts, double& As, double& AsErr, string binName, bool iffLike=false);
@@ -174,6 +174,7 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
  protected:
     bool checkMinCounts(double** counts);
     ofstream ****xCheckEventLists;
+    ofstream* fullXCheckEventList;
 
 
     //to reorder arrays used for fitting such that the x values are ascending and do not wrap around

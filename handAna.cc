@@ -1,4 +1,5 @@
 #include <iomanip>
+const bool PRINT=true;
  //one central place to put the define mc
 //has to be commented out in mc.h
 #include "handAna/mc.h" 
@@ -38,6 +39,16 @@ using namespace std;
 
 #include MDST_H
 #include EVTCLS_H
+
+#define PY_ELECTRON 11
+#define PY_MU 13
+#define PY_PI 211
+#define PY_K 321
+#define PY_Pi0 111
+#define PY_KS0 310
+#define PY_B0 511
+#define PY_B 521
+
 
 //#define SAVE_HISTOS
 
@@ -563,12 +574,14 @@ namespace Belle {
   // event function
   void handAna::event(BelleEvent* evptr, int* status)
   {
+    const double m_pi0=0.1349766;
     //    cout <<" event : " << endl;
     vector<float> v_drH1;
     vector<float> v_drH2;
     if(!validRun)
       {
-	//	cout <<"not a valid run.." <<endl;
+	if(PRINT)
+		cout <<"not a valid run.." <<endl;
 	return;
       }
     int evtNr;
@@ -583,8 +596,8 @@ namespace Belle {
 
     kinematics::evtNr=evtNr;
     kinematics::runNr=runNr;
-    //              cout <<"--> run = " << runNr <<" evtNr = "  <<evtNr <<endl;
-    //    cout <<" --> exp = "<<expNr << " run = " << runNr << " event = " << evtNr <<endl;
+           cout <<"--> run = " << runNr <<" evtNr = "  <<evtNr <<endl;
+        cout <<" --> exp = "<<expNr << " run = " << runNr << " event = " << evtNr <<endl;
     if(!IpProfile::usable())
       {
 	cout <<" ip not usable ..." << endl;
@@ -600,7 +613,8 @@ namespace Belle {
     //#ifndef MC
     if(!goodHadronB())
       {
-	//	cout <<" not a good hadron b..." <<endl;
+	if(PRINT)
+	cout <<" not a good hadron b..." <<endl;
 	return;
       }
     //#endif
@@ -649,7 +663,8 @@ namespace Belle {
     int iChTrks=0;//num of charged Tracks
     int iChTrkPos=0;
     int iChTrkNeg=0;
-    //   cout <<"chargedTracks: " << mdst_chr_Mgr.size() <<" num Trk: " << mdst_trk_Mgr.size() <<" klong: " << mdst_klong_Mgr.size() <<endl;
+    //    if(PRINT)
+    //      cout <<"chargedTracks: " << mdst_chr_Mgr.size() <<" num Trk: " << mdst_trk_Mgr.size() <<" klong: " << mdst_klong_Mgr.size() <<endl;
 
     //    cout <<"there are " << mdst_chr_Mgr.size() << " charge tracks in mdst_chr " <<endl;
     for(Mdst_charged_Manager::iterator chr_it=mdst_chr_Mgr.begin();chr_it!=mdst_chr_Mgr.end();chr_it++)
@@ -693,8 +708,8 @@ namespace Belle {
 	float mu_cut=0.9;
 	double e_id=sel_e.prob(3,-1,5);
 
-
-	//	cout <<"atcKPi: " << atcKPi <<", atcKP " << atcKP << " atcPiP: "<< atcPiP <<" e_id: "<< e_id <<" mu: "<< mu_id <<endl;
+	if(PRINT)
+		cout <<"atcKPi: " << atcKPi <<", atcKP " << atcKP << " atcPiP: "<< atcPiP <<" e_id: "<< e_id <<" mu: "<< mu_id <<endl;
 
 	if(DEBUG_EVENT==evtNr)
 	  {
@@ -708,7 +723,8 @@ namespace Belle {
 	  {
 	    if(DEBUG_EVENT==evtNr)
 	      {
-		//	      cout <<"is electron" <<endl;
+		if(PRINT)
+			      cout <<"is electron" <<endl;
 	      }
 	    m_mass=m_e;
 	    massHyp=0;
@@ -810,19 +826,21 @@ namespace Belle {
 	double dr, dz, refitPx, refitPy, refitPz;
 	getDrDz(chr_it, massHyp,dr,dz, refitPx, refitPy, refitPz);
 
-	//	cout <<"massHyp: "<< massHyp << " lab p: ("<< refitPx <<", " << refitPy <<", " << refitPz <<")" <<endl;
+	if(PRINT)
+		cout <<"massHyp: "<< massHyp << " lab p: ("<< refitPx <<", " << refitPy <<", " << refitPz <<")" <<endl;
 	v_vertexR.push_back(dr);
 	v_vertexZ.push_back(dz);
 
-	///
-	//	cout <<"looking at " <<(*chr_it).p(0) <<" " << (*chr_it).p(1) <<" " << (*chr_it).p(2) <<" massHyp: " <<  massHyp <<endl;
+	if(PRINT)
+	  cout <<"looking at " <<(*chr_it).p(0) <<" " << (*chr_it).p(1) <<" " << (*chr_it).p(2) <<" massHyp: " <<  massHyp <<endl;
 	if ( fabs(dr) > cuts::vertexR )//slides from kibayashi 
 	  {
 	    if(DEBUG_EVENT==evtNr|| DEBUG_EVENT2==evtNr)
 	      {
 		//	      cout <<"dr cut: " << fabs(dr) <<endl;
 	      }
-	    //	    cout <<" cut track due to vertex.. r: " << fabs(dr) <<" px lab of track:  " <<(*chr_it).p(0)<< endl;
+	    if(PRINT)
+	      cout <<" cut track due to vertex.. r: " << fabs(dr) <<" px lab of track:  " <<(*chr_it).p(0)<< endl;
 	    continue;
 	  }
 	if ( fabs(dz) > cuts::vertexZ ) 
@@ -831,7 +849,8 @@ namespace Belle {
 	      {
 		//cout <<"dz cut: " << fabs(dz) <<endl;
 	      }
-	    //	    cout <<" cut track due to vertex.. z" <<endl;
+	    if(PRINT)	    
+	    cout <<" cut track due to vertex.. z" <<endl;
 	    continue;//used to be 4
 	  }
 	if(charge>0)
@@ -856,7 +875,8 @@ namespace Belle {
 	      {
 		//	      cout <<"removing pt=: " << h3Vect.perp() <<endl;
 	      }
-	    //	      cout <<"removing pt=: " << h3Vect.perp() <<endl;
+	    if(PRINT)	   
+	      cout <<"removing pt=: " << h3Vect.perp() <<endl;
 	    continue;
 	  }
 	m_z=2*boostedVec.e()/kinematics::Q;
@@ -869,7 +889,8 @@ namespace Belle {
 
 	if(m_z<cuts::minZThrust)
 	  {
-	    //	    cout <<" cut E: "<< E <<endl;
+	    if(PRINT)
+	    	    cout <<" cut E: "<< E <<endl;
 	    continue;
 	  }
 	if(DEBUG_EVENT==evtNr|| DEBUG_EVENT2==evtNr)
@@ -903,8 +924,11 @@ namespace Belle {
 	      {
 		//	      cout <<"is lepton z: " << m_z <<endl;
 	      }
-	    //	    cout <<"lepton cut E: "<< E <<endl;
-	    //	       cout <<"is lepton z: " << m_z <<endl;
+	    if(PRINT)
+	      {
+	    	    cout <<"lepton cut E: "<< E <<endl;
+	    	       cout <<"is lepton z: " << m_z <<endl;
+	  }
 	    continue;
 	  }
 //	if(!isPionKaon)
@@ -924,8 +948,11 @@ namespace Belle {
 	  }
 	if(m_z<cuts::minZ)
 	  {
-	    //	    cout <<"minz cut E: "<< E <<endl;
-	    //	    cout <<"didn't pass min z...: "<< m_z <<", energy: " << boostedVec.e()<<endl;
+	    if(PRINT)
+	      {
+	    	    cout <<"minz cut E: "<< E <<endl;
+	    	    cout <<"didn't pass min z...: "<< m_z <<", energy: " << boostedVec.e()<<endl;
+	      }
 	    continue;
 	  }
 	if(cos(h3Vect.theta())<cuts::minCosTheta||cos(h3Vect.theta())>cuts::maxCosTheta)
@@ -934,8 +961,11 @@ namespace Belle {
 	      {
 		//		cout << "CUT cos theta: " << cos(h3Vect.theta()) <<"charge: " << charge <<endl;
 	      }
-	    //	    cout <<"cos theta cut E: "<< E <<endl;
-	    //	       cout << "CUT cos theta: " << cos(h3Vect.theta()) <<"charge: " << charge <<endl;
+	    if(PRINT)
+	      {
+	    	    cout <<"cos theta cut E: "<< E <<endl;
+	           cout << "CUT cos theta: " << cos(h3Vect.theta()) <<"charge: " << charge <<endl;
+	      }
 	    continue;
 	  }
 	if(DEBUG_EVENT==evtNr)
@@ -954,6 +984,26 @@ namespace Belle {
 	p->momentum().momentum(boostedVec);
 	//	cout <<"add to all particles for comp " <<endl;
 	v_allParticles.push_back(p);
+
+	if(isLepton){
+
+	}
+	else{
+	  if(fabs(p->pType().lund())==PY_PI)
+	    {
+	      chargedPiCandidates.push_back(p);
+	    }
+	  if(fabs(p->pType().lund())==PY_K)
+	    {
+	      chargedKCandidates.push_back(p);
+	    }
+	  //probably not a good event...
+	  if(!isPionKaon)
+	    {
+	      otherChargedTracks.push_back(p);
+	    }
+
+	}
       }
     Mdst_gamma_Manager& gamma_mgr=Mdst_gamma_Manager::get_manager();
     Mdst_ecl_aux_Manager& eclaux_mgr = Mdst_ecl_aux_Manager::get_manager();
@@ -972,10 +1022,12 @@ namespace Belle {
 	///there I take all for the thrust axis and the ones in the central region for
 	//the asymmetry
 	Mdst_ecl_aux &aux =eclaux_mgr(Panther_ID(gam.ecl().get_ID()));
-	//	cout <<"looking at gamma: ( " << px <<", " << py << ", "<< pz <<")"<<endl;
+	if(PRINT)
+	  cout <<"looking at gamma: ( " << px <<", " << py << ", "<< pz <<")"<<endl;
 	if(gam.ecl().quality()!=0)
 	  {
-	    //	    cout <<"loosing photon due to  quality " <<endl;
+	    if(PRINT)
+	     cout <<"loosing photon due to  quality " <<endl;
 	  continue;
 	  }
 	//ratio of energy in 3x3 cluster compared to 5x5 cluster in emcal
@@ -992,7 +1044,8 @@ namespace Belle {
 	//barrel energy cut is the lowest
 	if(gammaE<cuts::minGammaEBarrel)
 	  {
-	    //	    	    cout <<" loosing photon in barrel due to energy cut " << gammaE<<endl;
+	    if(PRINT)
+	      cout <<" loosing photon in barrel due to energy cut " << gammaE<<endl;
 	  continue;
 	  }
 	float photTheta= photVec.theta();
@@ -1002,13 +1055,15 @@ namespace Belle {
 	if(sector_gamma==1 || sector_gamma==3 || sector_gamma==5 || sector_gamma==7 ) continue;
 	if(sector_gamma==2 && gammaE<0.100) 
 	  {
-	    //     cout << "===> photon with E_lab = " << photon.p().e() << " theta_lab = " << toolbox->GetTheta(photon) << "  -> fwd;  should be E > 0.100 " << endl;
+	    //	    if(PRINT)
+	      //	    cout << "===> photon with E_lab = " << photon.p().e() << " theta_lab = " << toolbox->GetTheta(photon) << "  -> fwd;  should be E > 0.100 " << endl;
 	    continue;
 	  }
       
 	if(sector_gamma==4 && gammaE<0.050) 
 	  {
-	    // cout << "===> photon with E_lab = " << photon.p().e() << " theta_lab = " << toolbox->GetTheta(photon) << "  -> barrel;  should be E > 0.050 " << endl;
+	    //	    if(PRINT)
+	      //	     cout << "===> photon with E_lab = " << photon.p().e() << " theta_lab = " << toolbox->GetTheta(photon) << "  -> barrel;  should be E > 0.050 " << endl;
 	    continue;
 	  }
       
@@ -1023,6 +1078,62 @@ namespace Belle {
 	/////
 	/////
 	///
+
+    //////--->inserted pi0
+
+    Mdst_pi0_Manager &pi0_mgr=Mdst_pi0_Manager::get_manager();
+    for(std::vector<Mdst_pi0>::const_iterator i =pi0_mgr.begin();i!=pi0_mgr.end();i++)
+      {
+	const Mdst_pi0& pi0=*i;
+	int id =(int)pi0.get_ID();
+
+	double px=pi0.px();
+	double py=pi0.py();
+	double pz=pi0.pz();
+
+	Mdst_ecl_aux &aux1 =eclaux_mgr(Panther_ID(pi0.gamma(0).ecl().get_ID()));
+	//ratio of energy in 3x3 cluster compared to 5x5 cluster in emcal
+	double e9oe25_1 =aux1.e9oe25();
+	Mdst_ecl_aux &aux2 =eclaux_mgr(Panther_ID(pi0.gamma(1).ecl().get_ID()));
+	//ratio of energy in 3x3 cluster compared to 5x5 cluster in emcal
+	double e9oe25_2 =aux2.e9oe25();
+	double mass=pi0.mass(); //mass before fitting ???
+	if(mass>0.15 || mass<0.12)
+	  continue;
+	float pLab=sqrt(px*px+py*py+pz*pz);
+	//      cout <<"pi0mass: "<< mass <<endl;≈
+
+	float g1Energy= sqrt(pi0.gamma(0).px()*pi0.gamma(0).px()+pi0.gamma(0).py()*pi0.gamma(0).py()+pi0.gamma(0).pz()*pi0.gamma(0).pz());
+	float g2Energy= sqrt(pi0.gamma(1).px()*pi0.gamma(1).px()+pi0.gamma(1).py()*pi0.gamma(1).py()+pi0.gamma(1).pz()*pi0.gamma(1).pz());
+
+	if(g1Energy < 0.05 || g2Energy < 0.05)
+	  continue;
+	Particle* p=new Particle(pi0);
+	double confLevel;
+
+	HepPoint3D pi0DecPoint;
+	HepSymMatrix pi0ErrMatrix;
+
+	setGammaError(p->child(0),IpProfile::position(), IpProfile::position_err_b_life_smeared());
+	setGammaError(p->child(1),IpProfile::position(), IpProfile::position_err_b_life_smeared());
+
+	if(!doKmFit(*p,  confLevel,0,m_pi0))
+	  {
+	    continue;
+	  }
+
+	p->userInfo(*(new ParticleInfoMass()));
+	ParticleInfoMass& pinf=dynamic_cast<ParticleInfoMass&>(p->userInfo());
+	pinf.gammaE1=g1Energy;
+	pinf.gammaE2=g2Energy;
+	pinf.e9oe25_1=e9oe25_1;
+	pinf.e9oe25_2=e9oe25_2;
+	pi0Candidates.push_back(p);
+
+      }
+
+
+    /////---->done
 
 
 
@@ -1110,7 +1221,7 @@ namespace Belle {
 
     //  kinematics::thrustDirCM=thrust(allParticlesBoosted.begin(),allParticlesBoosted.end(),retSelf);
     kinematics::thrustDirCM=t.axis;
-
+    kinematics::thrustZReverted=false;
     if(rand() % 100 <50)
       {
 	//	kinematics::thrustDirCM.setZ((-1)*kinematics::thrustDirCM.z());
@@ -1190,29 +1301,32 @@ namespace Belle {
 
 
 
-    //        cout <<"----------------------------------"<<endl;
-    //        cout <<setw(10)<<" jet # "<<setw(10)<<" Px" <<setw(10)<< "Py"<<setw(10)<<" Pz "<<setw(10)<<"E"<<setw(10)<<" # constituents"<<endl;
-    //        cout <<"----------------------------------"<<endl;
+        cout <<"----------------------------------"<<endl;
+            cout <<setw(10)<<" jet # "<<setw(10)<<" Px" <<setw(10)<< "Py"<<setw(10)<<" Pz "<<setw(10)<<"E"<<setw(10)<<" # constituents"<<endl;
+            cout <<"----------------------------------"<<endl;
 
-    //        cout <<"-----------------------------------------------"<<endl<<endl;
-    //        cout <<"-----------------------------------------------"<<endl<<endl;
+           cout <<"-----------------------------------------------"<<endl<<endl;
+            cout <<"-----------------------------------------------"<<endl<<endl;
     for(unsigned int i=0;i<jets.size();i++)
       {
 	jetEnergyBeforeCuts->Fill(jets[i].E());
-	//		cout<< "Jet Number "  << setw(10)<< i << " momentum (x,y,z)  : "<<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
-	//		     cout << "jet " <<i <<": Pt: "<<jets[i].perp()<<" rapidity: " << jets[i].rap() << " phi: " <<jets[i].phi()<<"  momentum:  " << jets[i].E()<<endl;//jets[i].theta()<<endl;
+			cout<< "Jet Number "  << setw(10)<< i << " momentum (x,y,z)  : "<<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
+			cout << "jet " <<i <<": Pt: "<<jets[i].perp()<<" rapidity: " << jets[i].rap() << " phi: " <<jets[i].phi()<<"  momentum:  " << jets[i].E()<<endl;
 	     //for release, 3.75 was used...
 	if(jets[i].E()>2.75)
 	  numHighEJets++;
 	vector<PseudoJet> constituents=jets[i].constituents();
 	//		cout <<"jet has " << constituents.size() << " constituents: "  <<endl;
 	numPartInJetBeforeCuts->Fill(constituents.size());
-	//	for(unsigned j=0;j<constituents.size();j++)
-	//	{
+	if(PRINT)
+	  {
+		for(unsigned j=0;j<constituents.size();j++)
+		{
 
-	  //	  	  	 cout <<" constituent  " << j << "'s pt: " << constituents[j].perp() <<endl;
-	  //		     cout <<"constituent: px: " << constituents[j].px() << " py: " << constituents[j].py() << " Pz: " << constituents[j].pz() <<endl;
-	//	}
+		  //  	  	 cout <<" constituent  " << j << "'s pt: " << constituents[j].perp() <<endl;
+	  		     cout <<"constituent: px: " << constituents[j].px() << " py: " << constituents[j].py() << " Pz: " << constituents[j].pz() <<endl;
+		}
+	  }
 
       }
     //
@@ -1270,9 +1384,16 @@ namespace Belle {
 
 
     kinematics::jet1=Hep3Vector(jets[firstJetI].px(),jets[firstJetI].py(),jets[firstJetI].pz());
+    if(PRINT)
+      cout <<"px: "<< kinematics::jet1.x() <<", " << kinematics::jet1.y() <<", " << kinematics::jet1.z()<<endl;
     //to have the same convention as with thrust we have to flip the direction of the second jet...
     kinematics::jet2=Hep3Vector((-1)*jets[secondJetI].px(),(-1)*jets[secondJetI].py(),(-1)*jets[secondJetI].pz());
-    //    cout <<"jet theta: "<< kinematics::jet1.theta()<<", " << kinematics::jet2.theta()<<endl;
+    
+    if(PRINT)
+      {
+	cout <<"jet theta: "<< kinematics::jet1.theta()<<", " << kinematics::jet2.theta()<<endl;
+	cout <<" but really the second shoud be: "<< TMath::Pi()-kinematics::jet2.theta()<<endl;
+      }
     ///-------
     kinematics::dijet[0]=kinematics::jet1;
     kinematics::dijet[1]=kinematics::jet2;
@@ -2505,6 +2626,56 @@ namespace Belle {
     v_asyms.clear();
     //      allParticlesBoosted.clear();
 
+
+
+    for(int i=0;i<D0Candidates.size();i++){
+      delete D0Candidates[i];
+    }
+    D0Candidates.clear();
+
+    //    cout <<" done D0"<<D0Candidates.size()<<endl;
+
+    //    cout <<"  DStar size " <<DStarCandidates.size()<< endl;
+    for(int i=0;i<DStarCandidates.size();i++){
+      delete DStarCandidates[i];
+    }
+    DStarCandidates.clear();
+    //    cout <<" done DStar " <<DStarCandidates.size()<< endl;
+
+    //    cout <<" charged D "<<chargedKCandidates.size()<<endl;
+    for(int i=0;i<chargedDCandidates.size();i++){
+
+      delete chargedDCandidates[i];
+    }
+    chargedDCandidates.clear();
+    //    cout <<" done charged D "<<chargedDCandidates.size()<<endl;
+    //    cout <<" charged K "<<chargedKCandidates.size()<<endl;
+
+    //don't delete, since they are already deleted as part of v_allParticles
+    chargedKCandidates.clear();
+    //    cout <<" done charged K"<< chargedKCandidates.size()<<endl;
+
+
+    //    cout <<"pi0s: "<< pi0Candidates.size()<<endl;
+    for(int i=0;i<pi0Candidates.size();i++){
+      delete pi0Candidates[i];
+    }
+    pi0Candidates.clear();
+    //    cout <<" done pi0"<<endl;
+
+
+    //    cout <<"Ks candidates: " << KsCandidates.size()<<endl;
+    for(int i=0;i<KsCandidates.size();i++){
+      delete KsCandidates[i];
+    }
+    KsCandidates.clear();
+
+
+    //    cout <<" done Ks"<<endl;
+    //don't delete, since they are already deleted as part of 'all particles'
+    chargedPiCandidates.clear();
+    //    cout <<" done charged Pi"<<endl;
+
     //      cout <<"cleaning up.."<<endl;
     for(vector<HadronPair*>::iterator it=v_hadronPairsFirstH_PN.begin();it!=v_hadronPairsFirstH_PN.end();it++)
       {
@@ -2872,6 +3043,671 @@ namespace Belle {
     else if(theta>=bwd2) return 7;
   
     return -1;
+  }
+
+
+
+
+
+
+
+
+
+
+  //reconstruct D0 from pion, kaon, ks..
+  void handAna::reconstructD0()
+  {
+    double m_D0=1.86484;
+    double m_d0mass_max=m_D0+0.015;
+    double m_d0mass_min=m_D0-0.015;
+
+
+    //the mass range for which we do a mass/vertex constrained fit
+    double m_d0mass_maxLoose=m_D0+3*0.015;
+    double m_d0mass_minLoose=m_D0-3*0.015;
+
+
+
+    //nominal mass: 1.86484, use +- 0.015, except for K-pi+pi0 (0.025)
+    //D-->Kpi
+    for(vector<Particle*>::iterator itP=chargedPiCandidates.begin();itP!=chargedPiCandidates.end();itP++)
+      {
+	for(vector<Particle*>::iterator itK=chargedKCandidates.begin();itK!=chargedKCandidates.end();itK++)
+	  {
+	    Particle& pion= *(*itP);
+	    Particle& kaon= *(*itK);
+	    if(kaon.charge()+pion.charge()!=0) continue;
+	    HepLorentzVector p_d0=pion.p()+kaon.p();
+	    double m=p_d0.mag();
+
+
+
+
+	    Particle* d0 =new Particle(p_d0,Ptype(kaon.charge()<0 ? "D0" : "D0B"));
+	    //	if(!doKmVtxFit2(*(*itD),  confLevel,0))
+
+
+	    if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+
+	    d0->relation().append(kaon);
+	    d0->relation().append(pion);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_kaon=kaon.genHepevt();
+		const Gen_hepevt &h_pion=pion.genHepevt();
+		if(h_kaon && h_pion && h_kaon.mother() && h_pion.mother() && h_kaon.mother().get_ID()==h_pion.mother().get_ID()){
+		  d0->relation().genHepevt(h_kaon.mother());
+		}
+	      } 
+	    D0Candidates.push_back(d0);
+	  }
+      }
+
+    ////--->D to K-pi+pi0
+    //uses different mass cut:
+    m_d0mass_max=m_D0+0.025;
+    m_d0mass_min=m_D0-0.025;
+    for(vector<Particle*>::iterator itP=chargedPiCandidates.begin();itP!=chargedPiCandidates.end();itP++)
+      {
+	for(vector<Particle*>::iterator itK=chargedKCandidates.begin();itK!=chargedKCandidates.end();itK++)
+	  {
+	    for(vector<Particle*>::iterator itPi0=pi0Candidates.begin();itPi0!=pi0Candidates.end();itPi0++)
+	      {
+		Particle& pi0=*(*itPi0);
+		Particle& pion= *(*itP);
+		Particle& kaon= *(*itK);
+		if(kaon.charge()+pion.charge()!=0) continue;
+		HepLorentzVector p_d0=pion.p()+kaon.p()+pi0.p();
+		double m=p_d0.mag();
+
+
+
+		//	    cout <<"2 filling with " << m <<endl;
+
+
+		if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+		Particle* d0 =new Particle(p_d0,Ptype(kaon.charge()<0 ? "D0" : "D0B"));
+		d0->relation().append(kaon);
+		d0->relation().append(pion);
+		d0->relation().append(pi0);
+		if(m_mc)
+		  {
+		    const Gen_hepevt &h_kaon=kaon.genHepevt();
+		    const Gen_hepevt &h_pion=pion.genHepevt();
+		    const Gen_hepevt &h_pi0=pi0.genHepevt();
+		    if(h_pi0&&h_kaon && h_pion && h_kaon.mother() && h_pion.mother() && h_kaon.mother().get_ID()==h_pion.mother().get_ID() && h_pi0.mother() && h_pi0.mother()==h_kaon.mother()){
+		      d0->relation().genHepevt(h_kaon.mother());
+		    }
+		  }
+		D0Candidates.push_back(d0);
+	      }
+	  }
+      }
+    //and set the mass cuts back..
+    m_d0mass_max=m_D0+0.015;
+    m_d0mass_min=m_D0-0.015;
+    ///D->K-pi+pi+pi-
+    for(vector<Particle*>::iterator itP1=chargedPiCandidates.begin();itP1!=chargedPiCandidates.end();itP1++)
+      {
+	for(vector<Particle*>::iterator itP2=(itP1+1);itP2!=chargedPiCandidates.end();itP2++)  
+	  {
+	    for(vector<Particle*>::iterator itP3=(itP2+1);itP3!=chargedPiCandidates.end();itP3++)  
+	      {
+		for(vector<Particle*>::iterator itK=chargedKCandidates.begin();itK!=chargedKCandidates.end();itK++)
+		  {
+		    Particle& pion1= *(*itP1);
+		    Particle& pion2= *(*itP2);
+		    Particle& pion3= *(*itP3);
+		    Particle& kaon= *(*itK);
+		    if(kaon.charge()+pion1.charge()+pion2.charge()+pion3.charge()!=0) continue;
+		    HepLorentzVector p_d0=kaon.p()+pion1.p()+pion2.p()+pion3.p();
+		    double m=p_d0.mag();
+
+		    //	    cout <<"3 filling with " << m <<endl;
+
+
+		    if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+		    Particle* d0 =new Particle(p_d0,Ptype(kaon.charge()<0 ? "D0" : "D0B"));
+		    d0->relation().append(kaon);
+		    d0->relation().append(pion1);
+		    d0->relation().append(pion2);
+		    d0->relation().append(pion3);
+		    if(m_mc)
+		      {
+			const Gen_hepevt &h_kaon=kaon.genHepevt();
+			const Gen_hepevt &h_pion1=pion1.genHepevt();
+			const Gen_hepevt &h_pion2=pion2.genHepevt();
+			const Gen_hepevt &h_pion3=pion3.genHepevt();
+		    
+			if(h_kaon && h_pion1 && h_pion2&&h_pion3){
+			  if(h_kaon.mother() && h_pion1.mother() &&h_pion2.mother() && h_pion3.mother()){
+			    if( h_kaon.mother().get_ID()==h_pion1.mother().get_ID() && h_pion1.mother()==h_pion2.mother() && h_pion2.mother()==h_pion2.mother()){
+			      d0->relation().genHepevt(h_kaon.mother());
+			    }
+			  }
+			}
+		      }
+		    D0Candidates.push_back(d0);
+		  }
+	      }
+	  }
+      }
+ 
+    ////D-->Ks pi+pi-
+    for(vector<Particle*>::iterator itP1=chargedPiCandidates.begin();itP1!=chargedPiCandidates.end();itP1++)
+      {
+	for(vector<Particle*>::iterator itP2=itP1+1;itP2!=chargedPiCandidates.end();itP2++)
+	  {
+	    for(vector<Particle*>::iterator itKs=KsCandidates.begin();itKs!=KsCandidates.end();itKs++)
+	      {
+		Particle& pion1=*(*itP1);
+		Particle& pion2= *(*itP2);
+		Particle& Ks= *(*itKs);
+		if(pion1.charge()+pion2.charge()!=0) continue;
+		HepLorentzVector p_d0=pion1.p()+pion2.p()+Ks.p();
+		double m=p_d0.mag();
+
+		//	    cout <<"4 filling with " << m <<endl;
+
+
+		if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+		//		Particle* d0 =new Particle(p_d0,Ptype(k/.charge()<0 ? "D0" : "D0B"));
+		Particle* d0 =new Particle(p_d0,Ptype("D0"));
+		d0->relation().append(pion1);
+		d0->relation().append(pion2);
+		d0->relation().append(Ks);
+		if(m_mc)
+		  {
+		    const Gen_hepevt &h_pion1=pion1.genHepevt();
+		    const Gen_hepevt &h_pion2=pion2.genHepevt();
+		    const Gen_hepevt &h_Ks=Ks.genHepevt();
+		    if(h_pion1&&h_pion2 && h_Ks&& h_pion1.mother() && h_pion2.mother() && h_Ks.mother() && h_pion1.mother().get_ID()==h_pion2.mother().get_ID() && h_pion1.mother()==h_Ks.mother()){
+		      d0->relation().genHepevt(h_pion1.mother());
+		    }
+		  }
+		D0Candidates.push_back(d0);
+	      }
+	  }
+      }
+
+    ////D-->K+K-
+    for(vector<Particle*>::iterator itK1=chargedKCandidates.begin();itK1!=chargedKCandidates.end();itK1++)
+      {
+	for(vector<Particle*>::iterator itK2=itK1+1;itK2!=chargedKCandidates.end();itK2++)
+	  {
+	    Particle& kaon1= *(*itK1);
+	    Particle& kaon2= *(*itK2);
+	    if(kaon1.charge()+kaon2.charge()!=0) continue;
+	    HepLorentzVector p_d0=kaon1.p()+kaon2.p();
+	    double m=p_d0.mag();
+
+
+	    //	    cout <<"found k/k combination, filling with m: "<< m <<endl;
+	    if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+	    Particle* d0 =new Particle(p_d0,Ptype("D0"));
+	    d0->relation().append(kaon1);
+	    d0->relation().append(kaon2);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_kaon1=kaon1.genHepevt();
+		const Gen_hepevt &h_kaon2=kaon2.genHepevt();
+		if(h_kaon1 && h_kaon2 && h_kaon1.mother() && h_kaon2.mother() && h_kaon1.mother().get_ID()==h_kaon2.mother().get_ID()){
+		  d0->relation().genHepevt(h_kaon1.mother());
+		}
+	      } 
+	    D0Candidates.push_back(d0);
+	  }
+      }
+
+    //D-->Kspi0
+    for(vector<Particle*>::iterator itPi0=pi0Candidates.begin();itPi0!=pi0Candidates.end();itPi0++)
+      {
+	for(vector<Particle*>::iterator itKs=KsCandidates.begin();itKs!=KsCandidates.end();itKs++)
+	  {
+	    Particle& pi0= *(*itPi0);
+	    Particle& Ks= *(*itKs);
+	    HepLorentzVector p_d0=pi0.p()+Ks.p();
+	    double m=p_d0.mag();
+
+
+
+	    if(m>m_d0mass_max || m < m_d0mass_min ||isnan(m)) continue;
+	    Particle* d0 =new Particle(p_d0,Ptype( "D0"));
+	    d0->relation().append(pi0);
+	    d0->relation().append(Ks);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_pi0=pi0.genHepevt();
+		const Gen_hepevt &h_Ks=Ks.genHepevt();
+		if(h_pi0 && h_Ks && h_pi0.mother() && h_Ks.mother() && h_pi0.mother().get_ID()==h_Ks.mother().get_ID()){
+		  d0->relation().genHepevt(h_pi0.mother());
+		}
+	      } 
+	    D0Candidates.push_back(d0);
+	  }
+      }
+  }
+
+  void handAna::reconstructChargedD()
+  {
+    double m_DPlus=1.86962;
+    double m_dPlusmass_max=m_DPlus+0.015;
+    double m_dPlusmass_min=m_DPlus-0.015;
+    ////D-->KsPi
+    for(vector<Particle*>::iterator itKs=KsCandidates.begin();itKs!=KsCandidates.end();itKs++)
+      {
+	for(vector<Particle*>::iterator itP=chargedPiCandidates.begin();itP!=chargedPiCandidates.end();itP++)
+	  {
+	    Particle& Ks= *(*itKs);
+	    Particle& pion= *(*itP);
+	    HepLorentzVector p_dPlus=Ks.p()+pion.p();
+	    double m=p_dPlus.mag();
+
+
+	      
+	    if(m>m_dPlusmass_max || m < m_dPlusmass_min ||isnan(m)) continue;
+	    Particle* dPlus =new Particle(p_dPlus,Ptype(pion.charge() > 0 ? "D+" : "D-"));
+	    dPlus->relation().append(Ks);
+	    dPlus->relation().append(pion);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_Ks=Ks.genHepevt();
+		const Gen_hepevt &h_pion=pion.genHepevt();
+		if(h_Ks && h_pion && h_Ks.mother() && h_pion.mother() && h_Ks.mother().get_ID()==h_pion.mother().get_ID()){
+		  dPlus->relation().genHepevt(h_Ks.mother());
+		}
+	      } 
+	    chargedDCandidates.push_back(dPlus);
+	  }
+      }
+    
+
+    ///D->Kspi+pi+pi-
+    for(vector<Particle*>::iterator itP1=chargedPiCandidates.begin();itP1!=chargedPiCandidates.end();itP1++)
+      {
+	for(vector<Particle*>::iterator itP2=(itP1+1);itP2!=chargedPiCandidates.end();itP2++)  
+	  {
+	    for(vector<Particle*>::iterator itP3=(itP2+1);itP3!=chargedPiCandidates.end();itP3++)  
+	      {
+		for(vector<Particle*>::iterator itKs=KsCandidates.begin();itKs!=KsCandidates.end();itKs++)
+		  {
+		    Particle& pion1= *(*itP1);
+		    Particle& pion2= *(*itP2);
+		    Particle& pion3= *(*itP3);
+		    Particle& Ks= *(*itKs);
+		    double charge =pion1.charge()+pion2.charge()+pion3.charge();
+		    if(fabs(pion1.charge()+pion2.charge()+pion3.charge())>1) continue;
+		    HepLorentzVector p_dPlus=Ks.p()+pion1.p()+pion2.p()+pion3.p();
+		    double m=p_dPlus.mag();
+
+
+		    if(m>m_dPlusmass_max || m < m_dPlusmass_min ||isnan(m)) continue;
+		    Particle* dPlus =new Particle(p_dPlus,Ptype(charge >0 ? "D+" : "D-"));
+		    dPlus->relation().append(Ks);
+		    dPlus->relation().append(pion1);
+		    dPlus->relation().append(pion2);
+		    dPlus->relation().append(pion3);
+		    if(m_mc)
+		      {
+			const Gen_hepevt &h_Ks=Ks.genHepevt();
+			const Gen_hepevt &h_pion1=pion1.genHepevt();
+			const Gen_hepevt &h_pion2=pion2.genHepevt();
+			const Gen_hepevt &h_pion3=pion3.genHepevt();
+		    
+			if(h_Ks && h_pion1 && h_pion2&&h_pion3){
+			  if(h_Ks.mother() && h_pion1.mother() &&h_pion2.mother() && h_pion3.mother()){
+			    if( h_Ks.mother().get_ID()==h_pion1.mother().get_ID() && h_pion1.mother()==h_pion2.mother() && h_pion2.mother()==h_pion2.mother()){
+			      dPlus->relation().genHepevt(h_pion1.mother());
+			    }
+			  }
+			}
+		      }
+		    chargedDCandidates.push_back(dPlus);
+		  }
+	      }
+	  }
+      }
+
+
+    //D-->K-P+P+
+    for(vector<Particle*>::iterator itP1=chargedPiCandidates.begin();itP1!=chargedPiCandidates.end();itP1++)
+      {
+	for(vector<Particle*>::iterator itP2=itP1+1;itP2!=chargedPiCandidates.end();itP2++)
+	  {
+	    for(vector<Particle*>::iterator itK=chargedKCandidates.begin();itK!=chargedKCandidates.end();itK++)
+	      {
+		Particle& pion1=*(*itP1);
+		Particle& pion2= *(*itP2);
+		Particle& kaon= *(*itK);
+		
+		if(pion1.charge()!=pion2.charge()) continue;
+		if(kaon.charge()==pion1.charge()) continue;
+		double charge = pion1.charge()+pion2.charge()+kaon.charge();
+		HepLorentzVector p_dPlus=pion1.p()+pion2.p()+kaon.p();
+		double m=p_dPlus.mag();
+
+
+		if(m>m_dPlusmass_max || m < m_dPlusmass_min ||isnan(m)) continue;
+		//		Particle* d0 =new Particle(p_d0,Ptype(k/.charge()<0 ? "D0" : "D0B"));
+		Particle* dPlus =new Particle(p_dPlus,Ptype(charge > 0 ? "D+": "D-"));
+		dPlus->relation().append(pion1);
+		dPlus->relation().append(pion2);
+		dPlus->relation().append(kaon);
+		if(m_mc)
+		  {
+		    const Gen_hepevt &h_pion1=pion1.genHepevt();
+		    const Gen_hepevt &h_pion2=pion2.genHepevt();
+		    const Gen_hepevt &h_kaon=kaon.genHepevt();
+		    if(h_pion1&&h_pion2 && h_kaon&& h_pion1.mother() && h_pion2.mother() && h_kaon.mother() && h_pion1.mother().get_ID()==h_pion2.mother().get_ID() && h_pion1.mother()==h_kaon.mother()){
+		      dPlus->relation().genHepevt(h_pion1.mother());
+		    }
+		  }
+		chargedDCandidates.push_back(dPlus);
+	      }
+	  }
+      }
+
+    //D-->K+K-pi+
+    for(vector<Particle*>::iterator itK1=chargedKCandidates.begin();itK1!=chargedKCandidates.end();itK1++)
+      {
+	for(vector<Particle*>::iterator itK2=itK1+1;itK2!=chargedKCandidates.end();itK2++)
+	  {
+	    for(vector<Particle*>::iterator itP=chargedPiCandidates.begin();itP!=chargedPiCandidates.end();itP++)
+	      {
+		Particle& kaon1=*(*itK1);
+		Particle& kaon2= *(*itK2);
+		Particle& pion= *(*itP);
+		
+		if(kaon1.charge()==kaon2.charge()) continue;
+		double charge = kaon1.charge()+kaon2.charge()+pion.charge();
+		HepLorentzVector p_dPlus=kaon1.p()+kaon2.p()+pion.p();
+		double m=p_dPlus.mag();
+
+
+
+		if(m>m_dPlusmass_max || m < m_dPlusmass_min ||isnan(m)) continue;
+		//		Particle* d0 =new Particle(p_d0,Ptype(k/.charge()<0 ? "D0" : "D0B"));
+		Particle* dPlus =new Particle(p_dPlus,Ptype(charge > 0 ? "D+": "D-"));
+		dPlus->relation().append(kaon1);
+		dPlus->relation().append(kaon2);
+		dPlus->relation().append(pion);
+		if(m_mc)
+		  {
+		    const Gen_hepevt &h_kaon1=kaon1.genHepevt();
+		    const Gen_hepevt &h_kaon2=kaon2.genHepevt();
+		    const Gen_hepevt &h_pion=pion.genHepevt();
+		    if(h_kaon1&&h_kaon2 && h_pion&& h_kaon1.mother() && h_kaon2.mother() && h_pion.mother() && h_kaon1.mother().get_ID()==h_kaon2.mother().get_ID() && h_kaon1.mother()==h_pion.mother()){
+		      dPlus->relation().genHepevt(h_kaon1.mother());
+		    }
+		  }
+		chargedDCandidates.push_back(dPlus);
+	      }
+	  }
+      }
+
+
+
+  }
+
+  void handAna::reconstructDStar()
+  {
+    double m_DStarPlus=2.01027;
+    double m_DStar0=2.00697;
+    double m_D0=1.86484;
+    double m_DPlus=1.86962;
+
+    double m_dStarPlusmass_max=m_DStarPlus+0.015;
+    double m_dStarPlusmass_min=m_DStarPlus-0.015;
+
+    double m_dStar0mass_max=m_DStar0+0.015;
+    double m_dStar0mass_min=m_DStar0-0.015;
+
+    double max_massDifference=0.003;
+
+    //    cout <<" combining " << chargedDCandidates.size() <<" charged Ds with " << pi0Candidates.size() <<" pi0s"<<endl;
+    for(vector<Particle*>::iterator itD=chargedDCandidates.begin();itD!=chargedDCandidates.end();itD++)
+      {
+	//	break;
+	for(vector<Particle*>::iterator itPi0=pi0Candidates.begin();itPi0!=pi0Candidates.end();itPi0++)
+	  {
+	    Particle& D= *(*itD);
+	    Particle& pi0= *(*itPi0);
+
+	    bool doubleUse=false;
+	    //make sure that pi0 is not child of D
+	    for(int i =0;i<D.nChildren();i++)
+	      {
+		if(D.child(i).relation().isIdenticalWith(pi0.relation()))
+		  {
+		    //		    cout <<"found double use 1 .." <<endl;
+		    doubleUse=true;
+		    break;
+		  }
+	      }
+	    if(doubleUse)
+	      continue;
+
+
+	    HepLorentzVector p_dStar=D.p()+pi0.p();
+	    double m=p_dStar.mag();
+
+
+
+	    if(m>m_dStarPlusmass_max || m < m_dStarPlusmass_min ||isnan(m)) continue;
+	    //	    cout <<"looking at dstar, mass diff: " <<(m_DStarPlus-m_DPlus) <<" vs : " << (m-D.p().mag());
+	    //	    cout <<" gives: " << fabs(m-D.p().mag()-(m_DStarPlus-m_DPlus)) <<endl;
+
+	    if(fabs(m-D.p().mag()-(m_DStarPlus-m_DPlus)) > max_massDifference) continue;
+	    //	    cout <<"done " <<endl;
+	    Particle* dStar =new Particle(p_dStar,Ptype(D.charge()>0 ? "D*+" : "D*-"));
+	    dStar->relation().append(D);
+	    dStar->relation().append(pi0);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_D=D.genHepevt();
+		const Gen_hepevt &h_pi0=pi0.genHepevt();
+		if(h_D && h_pi0 && h_D.mother() && h_pi0.mother() && h_D.mother().get_ID()==h_pi0.mother().get_ID()){
+		  dStar->relation().genHepevt(h_D.mother());
+		}
+	      } 
+	    DStarCandidates.push_back(dStar);
+	  }
+      }
+
+
+    //    cout <<" combining " << D0Candidates.size() <<"  D0s with " << chargedPiCandidates.size() <<" charged "<<endl;
+    for(vector<Particle*>::iterator itD=D0Candidates.begin();itD!=D0Candidates.end();itD++)
+      {
+	for(vector<Particle*>::iterator itP=chargedPiCandidates.begin();itP!=chargedPiCandidates.end();itP++)
+	  {
+	    Particle& D= *(*itD);
+	    Particle& pion= *(*itP);
+
+	    bool doubleUse=false;
+	    //make sure that pion is not child of D
+	    for(int i =0;i<D.nChildren();i++)
+	      {
+		if(D.child(i).relation().isIdenticalWith(pion.relation()))
+		  {
+		    //		    cout <<"found double use 2 .." <<endl;
+		    doubleUse=true;
+		    break;
+		  }
+	      }
+	    if(doubleUse)
+	      continue;
+
+
+	    HepLorentzVector p_dStar=D.p()+pion.p();
+	    double m=p_dStar.mag();
+
+
+
+	    if(m>m_dStarPlusmass_max || m < m_dStarPlusmass_min ||isnan(m)) continue;
+	    //	    cout <<"m -D: "<< m-D.p().mag() <<endl;
+	    //	    cout <<"looking at dstar, mass diff: " <<(m_DStarPlus-m_D0) <<" vs : " << (m-D.p().mag());
+	    //	    cout <<" gives: " << fabs(m-D.p().mag()-(m_DStarPlus-m_D0)) <<endl;
+	    if(fabs(m-D.p().mag()-(m_DStarPlus-m_D0)) > max_massDifference) continue;
+	    //	    cout <<"done" <<endl;
+	    Particle* dStar =new Particle(p_dStar,Ptype(pion.charge()>0 ? "D*+" : "D*-"));
+	    dStar->relation().append(D);
+	    dStar->relation().append(pion);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_D=D.genHepevt();
+		const Gen_hepevt &h_pion=pion.genHepevt();
+		if(h_D && h_pion && h_D.mother() && h_pion.mother() && h_D.mother().get_ID()==h_pion.mother().get_ID()){
+		  dStar->relation().genHepevt(h_D.mother());
+		}
+	      } 
+	    DStarCandidates.push_back(dStar);
+	  }
+      }
+
+    ///D*0 from D0pi0
+    for(vector<Particle*>::iterator itD=D0Candidates.begin();itD!=D0Candidates.end();itD++)
+      {
+	//	break;
+	for(vector<Particle*>::iterator itPi0=pi0Candidates.begin();itPi0!=pi0Candidates.end();itPi0++)
+	  {
+	    Particle& D= *(*itD);
+	    Particle& pi0= *(*itPi0);
+
+	    bool doubleUse=false;
+	    //make sure that pi0 is not child of D
+	    for(int i =0;i<D.nChildren();i++)
+	      {
+		if(D.child(i).relation().isIdenticalWith(pi0.relation()))
+		  {
+		    //		    cout <<"found double use 3 .." <<endl;
+		    doubleUse=true;
+		    break;
+		  }
+	      }
+	    if(doubleUse)
+	      continue;
+
+
+	    HepLorentzVector p_dStar=D.p()+pi0.p();
+	    double m=p_dStar.mag();
+
+
+	    if(m>m_dStar0mass_max || m < m_dStar0mass_min ||isnan(m)) continue;
+	    //	    cout <<"looking at dstar, mass diff: " <<(m_DStar0-m_D0) <<" vs : " << (m-D.p().mag());
+	    //	    cout <<" gives: " << fabs(m-D.p().mag()-(m_DStar0-m_D0)) <<endl;
+	    if(fabs(m-D.p().mag()-(m_DStar0-m_D0)) > max_massDifference) continue;
+	    //	    cout <<" done " <<endl;
+	    Particle* dStar =new Particle(p_dStar,Ptype("D*0"));
+	    dStar->relation().append(D);
+	    dStar->relation().append(pi0);
+	    if(m_mc)
+	      {
+		const Gen_hepevt &h_D=D.genHepevt();
+		const Gen_hepevt &h_pi0=pi0.genHepevt();
+		if(h_D && h_pi0 && h_D.mother() && h_pi0.mother() && h_D.mother().get_ID()==h_pi0.mother().get_ID()){
+		  dStar->relation().genHepevt(h_D.mother());
+		}
+	      } 
+	    DStarCandidates.push_back(dStar);
+	  }
+      }
+
+
+
+
+
+  }
+
+
+  //this seems to have some impact...
+
+
+
+
+  unsigned handAna::doKmFit(Particle &p, double& confLevel, int debug, double mass)
+  {
+    //    return true;
+    kmassfitter km;
+    if(mass!=0)
+      {
+	//	cout <<" using mass; "<< mass <<endl;
+	km.invariantMass(mass);
+      }
+    //    km.invariantMass(mass==0 ? p.pType().mass(): mass);
+    else
+      km.invariantMass(mass==0 ? p.pType().mass(): mass);
+    for(unsigned j=0;j<p.relation().nChildren();j++)
+      {
+	Particle child=p.relation().child(j);
+	km.addTrack(child.momentum().p(),child.momentum().x(),child.momentum().dpx(),child.pType().charge(),child.pType().mass());
+      }
+    km.notDecayPoint();
+    unsigned err = km.fit();
+    if(err){
+      //           cout <<"Err in kmassvertexfitter: "<< err <<endl;
+      return 0;
+    }
+    //    else{cout <<"fit was ok.." <<endl;}
+    confLevel=km.cl();
+    return makeMother(km,p);
+  }
+
+  //dmitries code..
+  unsigned handAna::doKmVtxFit2(Particle &p, double& confLevel, int debug, double mass)
+  {
+
+    kmassvertexfitter kmvfitter;
+    kmvfitter.invariantMass(mass==0 ? p.pType().mass() : mass);
+    for(unsigned i=0; i<p.nChildren(); ++i)
+      addTrack2fit(kmvfitter, p.child(i));
+
+    if(p.nChildren()>2)
+      {
+	
+      }
+    //this is in the example, but probably old interface?
+    //    kmvfitter.vertex(IpProfile::position());
+    //    kmvfitter.errVertex(IpProfile::position_err());
+    kmvfitter.initialVertex(IpProfile::position());
+    //no error
+    if(!kmvfitter.fit()) {
+      makeMother(kmvfitter, p);
+      p.momentum().vertex(kmvfitter.vertex(),kmvfitter.errVertex());
+      confLevel=kmvfitter.cl();
+      return true;
+    }
+    return false;
+  }
+  //this seems to have some impact...
+  unsigned handAna::doKmVtxFit(Particle &p, double& confLevel, int debug)
+  {
+    //first get vertex:
+    kvertexfitter vtxFit;
+    vtxFit.initialVertex(p.x());
+    for(unsigned j=0;j<p.relation().nChildren();j++)
+      {
+	//	Particle child=p.relation().child(j);
+	//	vtxFit.addTrackToFit(child.momentum().p(),child.momentum().x(),child.momentum().dpx(),child.pType().charge(),child.pType().mass());
+      }
+
+    //    return true;
+    kmassvertexfitter km;
+    km.initialVertex(p.x());
+    km.invariantMass(p.pType().mass());
+    for(unsigned j=0;j<p.relation().nChildren();j++)
+      {
+	Particle child=p.relation().child(j);
+	km.addTrack(child.momentum().p(),child.momentum().x(),child.momentum().dpx(),child.pType().charge(),child.pType().mass());
+      }
+    //    km.notDecayPoint();
+    unsigned err = km.fit();
+    if(err){
+      //           cout <<"Err in kmassvertexfitter: "<< err <<endl;
+      return 0;
+    }
+    //    else{cout <<"fit was ok.." <<endl;}
+    confLevel=km.cl();
+    return makeMother(km,p);
   }
 
 

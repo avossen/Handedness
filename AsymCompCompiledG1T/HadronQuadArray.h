@@ -35,8 +35,9 @@ struct HadronQuadArray: public ReaderBase
   int minPairs;
   const float qTCut;
   const float minQt;
-  //qt cut used to be 4.7
-  HadronQuadArray(TChain* chain, int MCFlag=mcFlagNone):ReaderBase(MCFlag),hp1(chain, 1,MCFlag), hp2(chain, 2,MCFlag),qTCut(2.7), debugPrint(false), minPairs(0), minQt(0.0)
+  //qt cut used to be 4.7, now 2.7
+  // and now removed...
+  HadronQuadArray(TChain* chain, int MCFlag=mcFlagNone):ReaderBase(MCFlag),hp1(chain, 1,MCFlag), hp2(chain, 2,MCFlag),qTCut(2000.7), debugPrint(false), minPairs(0), minQt(0.0)
   {
     //        cout <<"had quad array chain: " << chain <<endl;
     myChain=chain;
@@ -76,6 +77,7 @@ struct HadronQuadArray: public ReaderBase
 
   void afterFill()
   {
+
     hp1.afterFill();
     hp2.afterFill();
 
@@ -97,6 +99,7 @@ struct HadronQuadArray: public ReaderBase
     //	cout <<" event pair counts, hemi1 : " << numPairsHemi1 <<" hemi2: "<< numPairsHemi2 << ", overall: " << hp1.numPairs<<endl;
     if(numPairsHemi1<minPairs || numPairsHemi2<minPairs)
       {
+
 	//cut all
 	for(int i=0;i<hp1.numPairs;i++)
 	  {
@@ -107,6 +110,9 @@ struct HadronQuadArray: public ReaderBase
 
     for(int i=0;i<hp1.numPairs;i++)
       {
+	cout <<"we have " << hp1.numPairs << " pairs " <<endl;
+	cout <<"looking at pair " << hp1.z[i] <<", " << hp2.z[i]<<endl;
+	cout <<"already cut? " <<  hp1.cut[i] << ", " << hp2.cut[i] <<endl;
 	weight[i]=1.0;
 	weightZero[i]=1.0;
 
@@ -114,26 +120,28 @@ struct HadronQuadArray: public ReaderBase
 	  {
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
+	    cout <<"min qt cut " << endl;
 	  }
 
 	if(qT[i]>qTCut)
 	  {
-	    //t	    cout <<" qt cut: " << qT[i] <<endl;
+	     cout <<" qt cut: " << qT[i] <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
 	if(isnan(phiRSum[i]))
 	  {
-	    //	    cout <<"isnan phirsum" <<endl;
+	    	    cout <<"isnan phirsum" <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
 	if(isnan(phiZeroR[i]))
 	  {
-	    //	    cout <<"isnan phirzero" <<endl;
+	    	    cout <<"isnan phirzero" <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
+	cout <<"cut? " << hp1.cut[i] <<" " << hp2.cut[i] <<endl;
 	hp1.phiZero[i]=phiZeroR[i];
 	hp2.phiZero[i]=phiZero1[i];
 	phiZeroDiff[i]=hp1.phiZero[i]-hp2.phiZero[i];

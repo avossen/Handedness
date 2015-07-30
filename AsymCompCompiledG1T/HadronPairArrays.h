@@ -185,28 +185,30 @@ struct HadronPairArray:public ReaderBase
 	if(cos(theta1[i])<minLabCosTheta && cos(theta2[i])<minLabCosTheta)
 	  {
 	    cut[i]=1;
+	    cout <<"cut hadron due to dec theta " << endl;
 	  }
 	if(cos(theta1[i])>maxLabCosTheta && cos(theta2[i])>maxLabCosTheta)
 	  {
 	    cut[i]=1;
+	    cout <<"max cos theta " << endl;
 	  }
 	if(z[i]<=0 || z[i] >1.1)
 	  {
-	    //	    if(particleType[i]==0 && chargeType[i]==0)
-	    //	      cout <<" cut due to wrong z: " << z[i] <<endl;
+	        if(particleType[i]==0 && chargeType[i]==0)
+	    	      cout <<" cut due to wrong z: " << z[i] <<endl;
 	    cut[i]=1;
 	  }
 
 	if(z[i] >zUpperCut)
 	  {
-
+	    cout <<"cut due to upper z cut.." <<endl;
 	    cut[i]=1;
 	  }
 
 	if(z[i] <zCut)
 	  {
-	    //	    if(particleType[i]==0 && chargeType[i]==0)
-	      //	      cout <<" zcut... " << z[i] <<endl;
+	    if(particleType[i]==0 && chargeType[i]==0)
+	      cout <<" zcut... " << z[i] <<endl;
 	    cut[i]=1;
 	  }
       
@@ -214,23 +216,25 @@ struct HadronPairArray:public ReaderBase
 	if(z1[i]>0)
 	  z1[i]=1/z1[i];
 	z2[i]=z[i]-z1[i];
-	//	cout <<"hp " <<"  z1["<<i<<"]: " << z1[i] <<" z2: " << z2[i] <<endl;
+
+	cout <<"hp " <<"  z1["<<i<<"]: " << z1[i] <<" z2: " << z2[i] <<endl;
 
 
 	if(z1[i]>singleZUpperCut || z2[i]>singleZUpperCut)
 	  {
+	    cout <<"single z cut.. " <<endl;
 	    cut[i]=1;
 	  }
 	if(z1[i]<singleZCut || z2[i]<singleZCut)
 	  {
-	    //	    if(particleType[i]==0 && chargeType[i]==0)
-	    //	      cout <<" singleZcut: "<< z1 <<" " << z2<<endl;
+	       if(particleType[i]==0 && chargeType[i]==0)
+	    	      cout <<" singleZcut: "<< z1 <<" " << z2<<endl;
 	    cut[i]=1;
 	  }
 
 	if(mass[i]<0 || mass[i] > 2.0)
 	  {
-	    //	    cout <<"cut, mass is wrong... " <<endl;
+	      cout <<"cut, mass is wrong... " <<endl;
 	  cut[i]=1;
 	  }
 	//	cout <<"getting dec theta: "<< decayTheta[i]<<", z is: "<< z[i] <<endl;;
@@ -244,10 +248,13 @@ struct HadronPairArray:public ReaderBase
 	if(fabs(thrustProj1[i])<OpeningCut || fabs(thrustProj2[i])<OpeningCut)
 	  {
 	    cut[i]=1;
-	    //	    cout <<"opening cut! " << thrustProj1[i] <<" or: " << thrustProj2[i] <<endl;
+	      cout <<"opening cut! " << thrustProj1[i] <<" or: " << thrustProj2[i] <<endl;
 	  }
 	if(fabs(thrustProj1[i])>maxOpeningCut || fabs(thrustProj2[i])>maxOpeningCut)
+	  {
+	    cout <<" thrust projection " <<endl;
 	  cut[i]=1;
+	  }
 	if(isnan(mass[i]) || isnan(z[i] || isnan(phiR[i])))
 	  {
 	   cut[i]=1;

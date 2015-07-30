@@ -589,10 +589,16 @@ public:
       dataF.push_back(kinematics::jetE2);
       //      cout <<"saving e1: "<< kinematics::jetE1 <<" e2: " << kinematics::jetE2 <<endl;
       dataF.push_back(kinematics::jet1.phi());
-      dataF.push_back(kinematics::jet2.phi());
+      double jet2Phi=gi.jetPhi2+TMath::Pi();
+      if(jet2Phi>2*TMath::Pi())
+	{
+	  jet2Phi-=(2*TMath::Pi());
+	}
+      dataF.push_back(jet2Phi);
 
+      //because we flipped the second jet
       dataF.push_back(kinematics::jet1.theta());
-      dataF.push_back(kinematics::jet2.theta());
+      dataF.push_back(TMath::Pi()-kinematics::jet2.theta());
 
 
 #ifdef MC
@@ -626,10 +632,16 @@ public:
       dataF.push_back(gi.jetE2);
 
       dataF.push_back(gi.jetPhi1);
-      dataF.push_back(gi.jetPhi2);
+      double gJet2Phi=gi.jetPhi2+TMath::Pi();
+      if(gJet2Phi>2*TMath::Pi())
+	{
+	  gJet2Phi-=(2*TMath::Pi());
+	}
+
+      dataF.push_back(gJet2Phi);
 
       dataF.push_back(gi.jetTheta1);
-      dataF.push_back(gi.jetTheta2);
+      dataF.push_back(TMath::Pi()-gi.jetTheta2);
       ///-----
 
 

@@ -263,10 +263,10 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
 }
 
 
-void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero)
+void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero, bool print)
 {
   /////  cout <<"---" <<endl;
-
+ cout <<"adding for...xxf run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
 
   //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
   //     cout <<"filling with " << hq->numHadQuads << " quads " << endl;
@@ -404,14 +404,23 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       //      cout <<" bin: "<< mbin1 <<endl;
       mbin2=getBin(binningM[hq->hp2.particleType[i]],hq->hp2.mass[i]);
 
-  //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
-      (*xCheckEventLists[0][mbin1][mbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i];
-      (*xCheckEventLists[0][mbin1][mbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl;
-
-
-      (*xCheckEventLists[1][zbin1][zbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i];
-      (*xCheckEventLists[1][zbin1][zbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl;
-
+      if(print)
+	{
+	  cout << "zbin1: : " << zbin1 <<" zbin2: "<< zbin2 << " m1: "<< mbin1 << " m2: "<< mbin2 <<endl;
+	  //      cout <<"looking at run: (xchecking)" << event.runNr <<" evt: "<< event.evtNr <<endl;
+	  (*xCheckEventLists[0][mbin1][mbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i]<<flush;
+	  (*xCheckEventLists[0][mbin1][mbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl<<flush;
+	  
+	  
+	  (*xCheckEventLists[1][zbin1][zbin2])<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i] <<flush
+      (*xCheckEventLists[1][zbin1][zbin2]) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl<<flush;
+	  cout <<"about to write (xchecking)" << event.runNr <<" evt: "<< event.evtNr <<endl;
+	  (*fullXCheckEventList)<< m_expNr <<" " <<event.runNr <<" " << event.evtNr <<" "<< zbin1 <<" " << zbin2 <<" " << mbin1 <<" " << mbin2 <<" "<<    hq->hp1.z[i]<< " "<< hq->hp2.z[i]<<" " <<hq->hp1.mass[i]<< " " << hq->hp2.mass[i] <<flush;
+	  (*fullXCheckEventList) << hq->hp1.phiR[i] << " " << hq->hp2.phiR[i]<<" " << phiRSum <<endl<<flush;
+	  (*fullXCheckEventList) <<flush;
+	  fullXCheckEventList->flush();
+	  cout <<"done(xchecking)" << event.runNr <<" evt: "<< event.evtNr <<endl;
+	}
 
 
       //                  cout <<"got from hp1: " << hq->hp1.z[i]<< " m: " << hq->hp1.mass[i] <<" from hp2 z: " << hq->hp2.z[i]<<" mass: "<< hq->hp2.mass[i]<<endx1l;
@@ -1608,7 +1617,7 @@ void MultiFitter::openXCheckFiles()
     {
       int currentBinning=binningNames[bN];
       xCheckEventLists[bN]=new ofstream**[maxKinMap[currentBinning].first];
-
+      cout <<" creating " << maxKinMap[currentBinning].first << " bins "  <<endl;
       for(int iK=0;iK<=maxKinMap[currentBinning].first;iK++)
 	{
 	  xCheckEventLists[bN][iK]=new ofstream*[maxKinMap[currentBinning].second];
@@ -1620,6 +1629,10 @@ void MultiFitter::openXCheckFiles()
 	    }
 	}
     }
+
+
+  fullXCheckEventList=new ofstream("allXCheckEvents.txt",iostream::app);
+
 }
 const int MultiFitter::numKinematicBinning=19;
 const int MultiFitter::numParticles=5;

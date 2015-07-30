@@ -426,7 +426,7 @@ int main(int argc, char** argv)
       //      cout <<"done loading, add to fitter " <<endl;
 
 
-      fitter.addHadQuadArray(&hadQuads, myEvent);
+      fitter.addHadQuadArray(&hadQuads, myEvent, false,true);
       fitterWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
       fitterAccWeighted.addHadQuadArray(&hadQuadsAccWeighted,myEvent);
       fitterAccDoubleWeighted.addHadQuadArray(&hadQuadsAccDoubleWeighted,myEvent);
