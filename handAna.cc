@@ -1,5 +1,5 @@
 #include <iomanip>
-const bool PRINT=true;
+const bool PRINT=false;
  //one central place to put the define mc
 //has to be commented out in mc.h
 #include "handAna/mc.h" 
@@ -596,8 +596,8 @@ namespace Belle {
 
     kinematics::evtNr=evtNr;
     kinematics::runNr=runNr;
-           cout <<"--> run = " << runNr <<" evtNr = "  <<evtNr <<endl;
-        cout <<" --> exp = "<<expNr << " run = " << runNr << " event = " << evtNr <<endl;
+    //           cout <<"--> run = " << runNr <<" evtNr = "  <<evtNr <<endl;
+    //        cout <<" --> exp = "<<expNr << " run = " << runNr << " event = " << evtNr <<endl;
     if(!IpProfile::usable())
       {
 	cout <<" ip not usable ..." << endl;
@@ -1224,10 +1224,10 @@ namespace Belle {
     kinematics::thrustZReverted=false;
     if(rand() % 100 <50)
       {
-	//	kinematics::thrustDirCM.setZ((-1)*kinematics::thrustDirCM.z());
-	//	kinematics::thrustDirCM.setY((-1)*kinematics::thrustDirCM.y());
-	//	kinematics::thrustDirCM.setX((-1)*kinematics::thrustDirCM.x());
-	//	kinematics::thrustZReverted=true;
+		kinematics::thrustDirCM.setZ((-1)*kinematics::thrustDirCM.z());
+		kinematics::thrustDirCM.setY((-1)*kinematics::thrustDirCM.y());
+		kinematics::thrustDirCM.setX((-1)*kinematics::thrustDirCM.x());
+		kinematics::thrustZReverted=true;
       }
     else
       {
@@ -1301,17 +1301,17 @@ namespace Belle {
 
 
 
-        cout <<"----------------------------------"<<endl;
-            cout <<setw(10)<<" jet # "<<setw(10)<<" Px" <<setw(10)<< "Py"<<setw(10)<<" Pz "<<setw(10)<<"E"<<setw(10)<<" # constituents"<<endl;
-            cout <<"----------------------------------"<<endl;
+    //        cout <<"----------------------------------"<<endl;
+    //            cout <<setw(10)<<" jet # "<<setw(10)<<" Px" <<setw(10)<< "Py"<<setw(10)<<" Pz "<<setw(10)<<"E"<<setw(10)<<" # constituents"<<endl;
+    //      cout <<"----------------------------------"<<endl;
 
-           cout <<"-----------------------------------------------"<<endl<<endl;
-            cout <<"-----------------------------------------------"<<endl<<endl;
+	    // cout <<"-----------------------------------------------"<<endl<<endl;
+	    //            cout <<"-----------------------------------------------"<<endl<<endl;
     for(unsigned int i=0;i<jets.size();i++)
       {
 	jetEnergyBeforeCuts->Fill(jets[i].E());
-			cout<< "Jet Number "  << setw(10)<< i << " momentum (x,y,z)  : "<<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
-			cout << "jet " <<i <<": Pt: "<<jets[i].perp()<<" rapidity: " << jets[i].rap() << " phi: " <<jets[i].phi()<<"  momentum:  " << jets[i].E()<<endl;
+	//			cout<< "Jet Number "  << setw(10)<< i << " momentum (x,y,z)  : "<<  setw(10)<<jets[i].px()<< setw(10)<<jets[i].py()<< setw(10)<<jets[i].pz()<< setw(10)<<jets[i].e()<< setw(10)<< jets[i].constituents().size()<<endl;
+	//			cout << "jet " <<i <<": Pt: "<<jets[i].perp()<<" rapidity: " << jets[i].rap() << " phi: " <<jets[i].phi()<<"  momentum:  " << jets[i].E()<<endl;
 	     //for release, 3.75 was used...
 	if(jets[i].E()>2.75)
 	  numHighEJets++;

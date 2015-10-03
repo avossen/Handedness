@@ -1,6 +1,6 @@
 #!/bin/bash
 rm FitRes_Dict.*
-CFLAGS=" -Wall -ggdb `root-config --cflags --libs` "
+CFLAGS=" -Wall -ggdb `root-config --cflags --libs`  -lMinuit -lRooFit"
 echo cflags: $CFLAGS
 rootcint -f FitRes_Dict.C -c  FitResults.h 
 c++ $CFLAGS TwoHadAsymsCleaned.cc TwoHadAsymsCommons.cc MultiFitter.cxx HadronQuadArray.cxx HadronPairArrays.cxx FitRes_Dict.C FitResults.cxx AcceptanceMap.cxx EventMixMap.cxx -o TwoHadAsymsCMod 

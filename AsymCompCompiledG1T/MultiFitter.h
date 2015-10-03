@@ -1,5 +1,6 @@
 #ifndef MULTI_FITTER_H
 #define MULTI_FITTER_H
+
 #include "NamedExp.h"
 #include "MEvent.h"
 #include "TwoHadAsymsCommons.h"

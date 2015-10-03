@@ -1,5 +1,6 @@
 #include "MultiFitter.h"
 #include "FitResults.h"
+#include "RooArgSet.h"
 
 void MultiFitter::loadThetaBinnings()
 {
@@ -266,11 +267,13 @@ void MultiFitter::savePlot(int binningType,int chargeType, plotType mPlotType)
 void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhiZero, bool print)
 {
   /////  cout <<"---" <<endl;
- cout <<"adding for...xxf run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
+  // cout <<"adding for...xxf run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
 
   //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
   //     cout <<"filling with " << hq->numHadQuads << " quads " << endl;
   //needed for the mean computation...
+  RooArgSet rSet;
+
   this->labTheta=event.thrustThetaLab;
   this->kinFactor=event.transProj;
 
@@ -1501,7 +1504,6 @@ void MultiFitter::saveAsymmetries(plotType mPlotType)
 {
   FitResults* m_fitResults=fitResults;
   FitResults* loc_fitResults=0;
-
 
   rFile.cd();
   TTree *tree = new TTree("AsymmetryTree","AsymmetryTree");

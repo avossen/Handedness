@@ -110,9 +110,9 @@ struct HadronQuadArray: public ReaderBase
 
     for(int i=0;i<hp1.numPairs;i++)
       {
-	cout <<"we have " << hp1.numPairs << " pairs " <<endl;
-	cout <<"looking at pair " << hp1.z[i] <<", " << hp2.z[i]<<endl;
-	cout <<"already cut? " <<  hp1.cut[i] << ", " << hp2.cut[i] <<endl;
+	//	cout <<"we have " << hp1.numPairs << " pairs " <<endl;
+	//	cout <<"looking at pair " << hp1.z[i] <<", " << hp2.z[i]<<endl;
+	//	cout <<"already cut? " <<  hp1.cut[i] << ", " << hp2.cut[i] <<endl;
 	weight[i]=1.0;
 	weightZero[i]=1.0;
 
@@ -120,28 +120,28 @@ struct HadronQuadArray: public ReaderBase
 	  {
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
-	    cout <<"min qt cut " << endl;
+	    //	    cout <<"min qt cut " << endl;
 	  }
 
 	if(qT[i]>qTCut)
 	  {
-	     cout <<" qt cut: " << qT[i] <<endl;
+	    //	     cout <<" qt cut: " << qT[i] <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
 	if(isnan(phiRSum[i]))
 	  {
-	    	    cout <<"isnan phirsum" <<endl;
+	    //	    	    cout <<"isnan phirsum" <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
 	if(isnan(phiZeroR[i]))
 	  {
-	    	    cout <<"isnan phirzero" <<endl;
+	    //	    	    cout <<"isnan phirzero" <<endl;
 	    hp1.cut[i]=1;
 	    hp2.cut[i]=1;
 	  }
-	cout <<"cut? " << hp1.cut[i] <<" " << hp2.cut[i] <<endl;
+	//	cout <<"cut? " << hp1.cut[i] <<" " << hp2.cut[i] <<endl;
 	hp1.phiZero[i]=phiZeroR[i];
 	hp2.phiZero[i]=phiZero1[i];
 	phiZeroDiff[i]=hp1.phiZero[i]-hp2.phiZero[i];
