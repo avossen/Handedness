@@ -1,4 +1,5 @@
 
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include "StyleSetter.h"
 #include "HadronQuadArray.h"
 #include "MultiFitter.h"
+#include "MultiFitterRF.h"
 #include "TwoHadAsymsCommons.h"
 #include "FitResults.h"
 
@@ -121,20 +123,20 @@ int main(int argc, char** argv)
   //  vector< pair<string,TChain*> > vFitterNames;
   vector<string> vFitterNames;
     vFitterNames.push_back("multFitOut");
-    vFitterNames.push_back("multFitOutEventMix");
-      vFitterNames.push_back("multFitOutWeighted");
-    vFitterNames.push_back("multFitOutZero");
-    vFitterNames.push_back("multFitOutZeroWoA");
+    //    vFitterNames.push_back("multFitOutEventMix");
+          vFitterNames.push_back("multFitOutWeighted");
+	  //vFitterNames.push_back("multFitOutZero");
+	  //    vFitterNames.push_back("multFitOutZeroWoA");
     vFitterNames.push_back("multFitOutWoA");
-    vFitterNames.push_back("multFitOutMinusWoA");
-    vFitterNames.push_back("multFitOutMinusWoAWeighted");
-    vFitterNames.push_back("multFitMixOut_");
-    vFitterNames.push_back("fitMinusMix");
-    vFitterNames.push_back("fitMinusEventMix");
-    vFitterNames.push_back("multFitOutAccWeighted");
-    vFitterNames.push_back("multFitOutAccDoubleWeighted");
+    //    vFitterNames.push_back("multFitOutMinusWoA");
+    //    vFitterNames.push_back("multFitOutMinusWoAWeighted");
+    //    vFitterNames.push_back("multFitMixOut_");
+    //    vFitterNames.push_back("fitMinusMix");
+    //    vFitterNames.push_back("fitMinusEventMix");
+    //    vFitterNames.push_back("multFitOutAccWeighted");
+    //    vFitterNames.push_back("multFitOutAccDoubleWeighted");
 
-  vector<MultiFitter*> vFitters;
+  vector<MultiFitterRF*> vFitters;
 
   TChain* chAll=0;
 
@@ -152,7 +154,7 @@ int main(int argc, char** argv)
             cout <<"adding : "<< (string(rootPath)+"/"+(*it)+"_*.root").c_str() <<endl;
       Int_t nevents=chAll->GetEntries();
       cout <<"Fitter Name: " << *it<<endl;
-      MultiFitter* pFitter=new MultiFitter(it->c_str(),string(""),0,false,false,false,false,16);
+      MultiFitterRF* pFitter=new MultiFitterRF(it->c_str(),string(""),0,false,false,false,false,16);
       pFitter->setName(*it);
       vFitters.push_back(pFitter);
       //has to be 0!!
@@ -160,6 +162,9 @@ int main(int argc, char** argv)
       chAll->SetBranchAddress("AsymBranch",&fitResults);
       for(int binningType=binType_m_m; binningType<binType_end;binningType++)
 	{
+	  //for the unbinned stuff
+	  if(binningType>binType_mOnly || binningType==binType_labTheta_z || binningType==binType_kinFact_z)
+	    continue;
 	  for(int chargeBin=0;chargeBin<1;chargeBin++)
 	    {
 	      for(int firstBin=0;firstBin<pFitter->maxKinMap[binningType].first;firstBin++)
@@ -181,11 +186,11 @@ int main(int argc, char** argv)
 
       //save indices for one binning to calculate average...
       set<int> massResIndices;
-      for(int firstBin=0;firstBin<pFitter->maxKinMap[binType_mOnly].first;firstBin++)
+      for(int firstBin=0;firstBin<pFitter->maxKinMap[binType_m_z].first;firstBin++)
 	{
-	  for(int secondBin=0;secondBin<pFitter->maxKinMap[binType_mOnly].second;secondBin++)
+	  for(int secondBin=0;secondBin<pFitter->maxKinMap[binType_m_z].second;secondBin++)
 	    {
-	      int resIdx=pFitter->getResIdx(binType_mOnly,quadPN,firstBin,secondBin);
+	      int resIdx=pFitter->getResIdx(binType_m_z,quadPN,firstBin,secondBin);
 	      massResIndices.insert(resIdx);
 	    }
 	}
@@ -198,20 +203,20 @@ int main(int argc, char** argv)
 
 
       //enough space for 100 exp * on/off resonance
-      float** mX=allocateArray<float>(3,200);
-      float** mY=allocateArray<float>(3,200);
-      float** mXErr=allocateArray<float>(3,200);
-      float** mYErr=allocateArray<float>(3,200);
-      float** sumWeights=allocateArray<float>(3,200);
+      float** mX=allocateArray<float>(5,200);
+      float** mY=allocateArray<float>(5,200);
+      float** mXErr=allocateArray<float>(5,200);
+      float** mYErr=allocateArray<float>(5,200);
+      float** sumWeights=allocateArray<float>(5,200);
 
-      float** mXOnRes=allocateArray<float>(3,200);
-      float** mYOnRes=allocateArray<float>(3,200);
-      float** mXErrOnRes=allocateArray<float>(3,200);
-      float** mYErrOnRes=allocateArray<float>(3,200);
-      float** sumWeightsOnRes=allocateArray<float>(3,200);
+      float** mXOnRes=allocateArray<float>(5,200);
+      float** mYOnRes=allocateArray<float>(5,200);
+      float** mXErrOnRes=allocateArray<float>(5,200);
+      float** mYErrOnRes=allocateArray<float>(5,200);
+      float** sumWeightsOnRes=allocateArray<float>(5,200);
       for(int i=0;i<200;i++)
 	{
-	  for(int j=0;j<3;j++)
+	  for(int j=0;j<5;j++)
 	    {
 	      mX[j][i]=i/2;
 	      if(i%2)
@@ -222,7 +227,7 @@ int main(int argc, char** argv)
 
       for(long i=0;i<nevents;i++)
 	{
-	  float locW[3]={0.0,0.0,0.0};
+	  float locW[5]={0.0,0.0,0.0,0.0,0.0};
 	  chAll->GetEntry(i);
 	  //	  	  cout <<"loaded exp: " << fitResults->exp <<" onres? " << fitResults->on_res <<" hand: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<endl;
 	  //	  	  if(fitResults->calcType==plotType_1D)
@@ -236,18 +241,28 @@ int main(int argc, char** argv)
 		    //	    continue;//only continuum
 	  if(fitResults->exp<=minExp ||(fitResults->on_res && (badOnRes.find(fitResults->exp)!=badOnRes.end())) ||(!fitResults->on_res && (badCont.find(fitResults->exp)!=badCont.end())))
 	    continue;
-
+	  if(fitResults->eA1 < 0.002 || fitResults->eA2<0.002 || fitResults->eA3 <0.002 || fitResults->eA1PP<0.002)
+	    continue;
+	  if(fitResults->invalidNLL>0)
+	    continue;
 	  //	  	  if(!fitResults->isCharm)
 	  //	  continue;
 
-	  //	  cout <<"we got the asymmetry: " << fitResults->A1 <<" for " << *it <<endl;
+	  cout <<"we got the asymmetry: " << fitResults->A1 <<" for " << *it <<endl;
 	  //	  cout <<"loading resIdx: " << fitResults->resultIndex<<" oneD? "<< fitResults->calcType<<endl;
-	  //	  fitResults->print();
+	  fitResults->print();
 	  //was max 5 and min 0.1
+
 
 	  pFitter->fitResults[fitResults->resultIndex].setChi2NdfCut(50.0);
 	  pFitter->fitResults1D[fitResults->resultIndex].setChi2NdfCut(50.0);
 	  pFitter->fitResultsDR[fitResults->resultIndex].setChi2NdfCut(50.0);
+
+	  //when mle doesn't converge properly, the error is way to small
+
+	  pFitter->fitResults[fitResults->resultIndex].setMinErrorCut(0.001);
+	  pFitter->fitResults1D[fitResults->resultIndex].setMinErrorCut(0.001);
+	  pFitter->fitResultsDR[fitResults->resultIndex].setMinErrorCut(0.001);
 
 	  pFitter->fitResults[fitResults->resultIndex].setMinChi2NdfCut(0.0);
 	  pFitter->fitResults1D[fitResults->resultIndex].setMinChi2NdfCut(0.0);
@@ -264,14 +279,24 @@ int main(int argc, char** argv)
 	      //	      cout <<"1d end"<<endl;
 	    }
 
-	  if(fitResults->calcType==plotType_2D)
+	  if(fitResults->calcType==plotType_RF)
 	    {
 	      //		cout <<"pFitter before : broken bin a1: "<< pFitter->fitResults[brokenBin].A1 <<" +- " << pFitter->fitResults[brokenBin].eA1 << " a2: " << pFitter->fitResults[brokenBin].A2 <<" +- " << pFitter->fitResults[brokenBin].eA2 << " a3: " << pFitter->fitResults[brokenBin].A3 <<" +- " << pFitter->fitResults[brokenBin].eA3 << endl;
 	      pFitter->fitResults[fitResults->resultIndex]+=(*fitResults);
+
+
+		  if(fitResults->resultIndex==pFitter->getResIdx(binType_zOnly,quadPN,0,0))
+		    {
+		      cout << "first z bin exp: "<< fitResults->exp<<", a1: "<< fitResults->A1 <<" +- " << fitResults->eA1 << " a2: " << fitResults->A2 <<" +- " << fitResults->eA2 << " a3: " << fitResults->A3 <<" +- " << fitResults->eA3 << endl;
+				cout <<" A1:: " << fitResults->A1PP <<" +- "<< fitResults->eA1PP <<" A3:: " << fitResults->A3PP <<" +- " << fitResults->eA3PP <<endl;
+		    }
 	      if(fitResults->resultIndex==brokenBin)
 		{
+		  //first z only bin
 
-		  //		  cout <<"fitter name; " << *it <<endl;
+
+
+		      //		  cout <<"fitter name; " << *it <<endl;
 		  //		cout << "broken bin a1: "<< fitResults->A1 <<" +- " << fitResults->eA1 << " a2: " << fitResults->A2 <<" +- " << fitResults->eA2 << " a3: " << fitResults->A3 <<" +- " << fitResults->eA3 << endl;
 		  //		cout <<"pFitter: broken bin a1: "<< pFitter->fitResults[brokenBin].A1 <<" +- " << pFitter->fitResults[brokenBin].eA1 << " a2: " << pFitter->fitResults[brokenBin].A2 <<" +- " << pFitter->fitResults[brokenBin].eA2 << " a3: " << pFitter->fitResults[brokenBin].A3 <<" +- " << pFitter->fitResults[brokenBin].eA3 << endl;
 		}
@@ -325,9 +350,9 @@ int main(int argc, char** argv)
 		{
 		  //				cout <<"strange 2: exp: " << fitResults->exp << "on res: " << fitResults->on_res <<" handed: " << fitResults->getA(1) <<" +- " << fitResults->getErr(1) <<" fitter: " << (*it)<<endl;
 		}
-
-
-
+	    }
+	  if(fitResults->calcType==plotType_RF)
+	    {
 	      //is one of the m asymmetries
 	      if(massResIndices.find(fitResults->resultIndex)!=massResIndices.end())
 		{
@@ -448,16 +473,15 @@ int main(int argc, char** argv)
       //only want to plot for the real results
       if((*it)==string("multFitOutWeighted"))
 	{
-
-
-
-	  	  cout<<"saving results vs exp" <<endl;
+	  cout<<"saving results vs exp" <<endl;
 	  TFile tmpFile("resVsExpWeighted.root","recreate");
 	  TGraphErrors tgA1(counter[0],mX[0],mY[0],mXErr[0],mYErr[0]);
 	  TH1D thA1("hIff","hIff",100,-10,10);
+	  TH1D thA1PP("hIffPP","hIffPP",100,-10,10);
 	  TH1D thA2("hHand","hHand",100,-10,10);
 	  TH1D thA3("hG1T","hG1T",100,-10,10);
-	  for(int j=0;j<3;j++)
+	  TH1D thA3PP("hG1TPP","hG1TPP",100,-10,10);
+	  for(int j=0;j<5;j++)
 	    {
 	  for(int i=0;i<counter[j];i++)
 	    {
@@ -474,6 +498,13 @@ int main(int argc, char** argv)
 		    case 2:
 		      thA3.Fill(mY[j][i]/mYErr[j][i]);
 		      break;
+		    case 3:
+		      thA1PP.Fill(mY[j][i]/mYErr[j][i]);
+		      break;
+		    case 4:
+		      thA3PP.Fill(mY[j][i]/mYErr[j][i]);
+		      break;
+
 		    default:
 		      break;
 		    }
@@ -514,19 +545,16 @@ int main(int argc, char** argv)
             //only want to plot for the real results
       if((*it)==string("multFitOut"))
 	{
-	  int maxMBin=pFitter->maxKinMap[binType_m_m].second;
-
+	  int maxMBin=pFitter->maxKinMap[binType_zOnly].second;
 	  for(int m1bin=0;m1bin<maxMBin;m1bin++)
 	    {
 	      for(int m2bin=0;m2bin<maxMBin;m2bin++)
 		{
-		  cout <<"m1 bin: " << m1bin<<" m2bin: "<< m2bin<<endl;
-		  int resIdx=pFitter->getResIdx(binType_m_m,quadPN,m1bin,m2bin);
+		  cout <<"onlyZ z1 bin: " << m1bin<<" z2bin: "<< m2bin<<endl;
+		  int resIdx=pFitter->getResIdx(binType_zOnly,quadPN,m1bin,m2bin);
 		  cout <<pFitter->fitResults[resIdx].meanKinBin1 <<", " << pFitter->fitResults[resIdx].meanKinBin2<<", A: "<< pFitter->fitResults[resIdx].getA(0) <<" +- "<< pFitter->fitResults[resIdx].getErr(0)<<endl;
 		}
 	    }
-
-
 
 	  cout<<"saving results vs exp" <<endl;
 	  TFile tmpFile("resVsExp.root","recreate");
@@ -540,6 +568,7 @@ int main(int argc, char** argv)
 	  tgA2.Write();
 	  tgA3.Write();
 	  TH1D thA1("hIff","hIff",100,-10,10);
+
 	  TH1D thA2("hHand","hHand",100,-10,10);
 	  TH1D thA3("hG1T","hG1T",100,-10,10);
 	  for(int j=0;j<3;j++)
@@ -590,50 +619,51 @@ int main(int argc, char** argv)
 
       //      pFitter->savePlot(binType_m_m,quadPN);
       //      pFitter->savePlot(binType_z_z,quadPN);
+
       pFitter->savePlot(binType_m_z,quadPN);
       pFitter->savePlot(binType_z_m,quadPN);
 
-      pFitter->savePlot(binType_labTheta_z,quadPN);
-      pFitter->savePlot(binType_kinFact_z,quadPN);
+      //      pFitter->savePlot(binType_labTheta_z,quadPN);
+      //      pFitter->savePlot(binType_kinFact_z,quadPN);
       pFitter->savePlot(binType_zOnly,quadPN);
-      pFitter->savePlot(binType_sinDecThetaOnly,quadPN);
-      pFitter->savePlot(binType_cosDecThetaOnly,quadPN);
+      //      pFitter->savePlot(binType_sinDecThetaOnly,quadPN);
+      //      pFitter->savePlot(binType_cosDecThetaOnly,quadPN);
 
-      pFitter->savePlot(binType_ThrustThetaPhi,quadPN);
-      pFitter->savePlot(binType_ThrustPhiTheta,quadPN);
+      //      pFitter->savePlot(binType_ThrustThetaPhi,quadPN);
+      //      pFitter->savePlot(binType_ThrustPhiTheta,quadPN);
 
       //      cout <<"save m only: "<<binType_mOnly<<", quadPN: "<< quadPN<<endl;
       pFitter->savePlot(binType_mOnly,quadPN);
-      pFitter->savePlot(binType_ThrustOnly,quadPN);
-      pFitter->savePlot(binType_EmissOnly,quadPN);
+      //      pFitter->savePlot(binType_ThrustOnly,quadPN);
+      //      pFitter->savePlot(binType_EmissOnly,quadPN);
 
       //      cout <<"done" <<endl;
-      pFitter->savePlot(binType_labThetaOnly,quadPN);
+      //      pFitter->savePlot(binType_labThetaOnly,quadPN);
       
-            pFitter->savePlot(binType_kinFactOnly,quadPN);
-	  pFitter->savePlot(binType_hadOpeningOnly,quadPN);
-	  pFitter->savePlot(binType_multOnly,quadPN);
-	  pFitter->savePlot(binType_m_m,quadPN);
-	  pFitter->savePlot(binType_z_z,quadPN);
+      //      pFitter->savePlot(binType_kinFactOnly,quadPN);
+      //	  pFitter->savePlot(binType_hadOpeningOnly,quadPN);
+      //	  pFitter->savePlot(binType_multOnly,quadPN);
+      //	  pFitter->savePlot(binType_m_m,quadPN);
+      //	  pFitter->savePlot(binType_z_z,quadPN);
       for(plotType pt=plotType_1D;pt<plotType_end;pt=(plotType)((int)pt+1))
 	{
-	  pFitter->savePlot(binType_qTOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_qTOnly,quadPN,pt);
 	  pFitter->savePlot(binType_z_m,quadPN,pt);
 	  pFitter->savePlot(binType_m_z,quadPN,pt);
-	  pFitter->savePlot(binType_m_m,quadPN,pt);
-	  pFitter->savePlot(binType_z_z,quadPN,pt);
-	  pFitter->savePlot(binType_ThrustThetaPhi,quadPN,pt);
-	  pFitter->savePlot(binType_ThrustPhiTheta,quadPN,pt);
+	  //	  pFitter->savePlot(binType_m_m,quadPN,pt);
+	  //	  pFitter->savePlot(binType_z_z,quadPN,pt);
+	  //	  pFitter->savePlot(binType_ThrustThetaPhi,quadPN,pt);
+	  //	  pFitter->savePlot(binType_ThrustPhiTheta,quadPN,pt);
 	  pFitter->savePlot(binType_mOnly,quadPN,pt);
 	  pFitter->savePlot(binType_zOnly,quadPN,pt);
-	  pFitter->savePlot(binType_sinDecThetaOnly,quadPN,pt);
-	  pFitter->savePlot(binType_cosDecThetaOnly,quadPN,pt);
-	  pFitter->savePlot(binType_labThetaOnly,quadPN,pt);
-	  pFitter->savePlot(binType_ThrustOnly,quadPN,pt);
-	  pFitter->savePlot(binType_EmissOnly,quadPN,pt);
-	  pFitter->savePlot(binType_kinFactOnly,quadPN,pt);
-	  pFitter->savePlot(binType_hadOpeningOnly,quadPN,pt);
-	  pFitter->savePlot(binType_multOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_sinDecThetaOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_cosDecThetaOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_labThetaOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_ThrustOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_EmissOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_kinFactOnly,quadPN,pt);
+	  ///	  pFitter->savePlot(binType_hadOpeningOnly,quadPN,pt);
+	  //	  pFitter->savePlot(binType_multOnly,quadPN,pt);
 	}
 
       

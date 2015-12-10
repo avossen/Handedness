@@ -32,8 +32,9 @@ echo "#SBATCH -e /pic/projects/belle/voss771/handOut/AsymCompOut/O_$myDir.err" >
 echo "#SBATCH -J AsymComp_$myDir"  >> $targetShFile 
 cat batchHead2.sh >> $targetShFile 
 echo "/people/voss771/handedness/AsymCompCompiledG1T/TwoHadAsymsCMod $dataDir" >>$targetShFile
-echo "find . -iname '*$ex*.root' -amin -60 -print0 " >> $targetShFile 
-echo "find . -iname '*$ex*.root' -amin -60 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;" >> $targetShFile 
+ls -lrth
+echo "find . -iname '*$ex*.root' -amin -300 -print0 " >> $targetShFile 
+echo "find . -iname '*$ex*.root' -amin -300 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;" >> $targetShFile 
 cat batchEnd.sh >> $targetShFile
 #fi
 #fi

@@ -4,6 +4,7 @@ dateString=`date +%d%b%Y`
 
 # Grab the exit code of BASF
 BASFRET=$?
+echo exit code is $BASFRET
 echo VOSS771_BASF_FINISH `date`
 
 

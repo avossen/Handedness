@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -A belle        # this is the account to which time is charged --
 #                       # use `belle' for belle analysis 
-#SBATCH -t 12:00:00     # time limit for job in HH:MM:SS
+#SBATCH -t 22:00:00     # time limit for job in HH:MM:SS
 #SBATCH -N 1            # number of CPU cores requested
 #SBATCH -o /pic/projects/belle/voss771/handOut/AsymCompOut/O_subData_ex55_on_resonance.out
 #SBATCH -e /pic/projects/belle/voss771/handOut/AsymCompOut/O_subData_ex55_on_resonance.err
@@ -35,8 +35,9 @@ export LD_LIBRARY_PATH=/people/voss771/handedness/AsymCompiledG1T:`root-config -
 echo    $LD_LIBRARY_PATH
 
 /people/voss771/handedness/AsymCompCompiledG1T/TwoHadAsymsCMod /pic/projects/belle/voss771/subData_ex55_on_resonance
-find . -iname '*55*.root' -amin -60 -print0 
-find . -iname '*55*.root' -amin -60 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;
+ls -lh
+find . -iname '*55*.root' -amin -300 -print0 
+find . -iname '*55*.root' -amin -300 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;
 cp hEMiss.root /pic/projects/belle/voss771/hEMissData55_onRes.root
 
 

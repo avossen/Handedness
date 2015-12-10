@@ -1,6 +1,10 @@
 #include "MultiFitter.h"
 #include "FitResults.h"
-#include "RooArgSet.h"
+#include "TCut.h"
+#include "RooGenericPdf.h"
+#include "RooFitResult.h"
+#include "RooExtendPdf.h"
+#include "RooAbsReal.h"
 
 void MultiFitter::loadThetaBinnings()
 {
@@ -272,7 +276,7 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
   //  cout <<"looking at run: " << event.runNr <<" evt: "<< event.evtNr <<endl;
   //     cout <<"filling with " << hq->numHadQuads << " quads " << endl;
   //needed for the mean computation...
-  RooArgSet rSet;
+
 
   this->labTheta=event.thrustThetaLab;
   this->kinFactor=event.transProj;
@@ -383,6 +387,9 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       cosDecThetaBin1=getBin(binningCosDecTheta,cosDecTheta1);
       cosDecThetaBin2=getBin(binningCosDecTheta,cosDecTheta2);
 
+      decayTheta1=hq->hp1.decayTheta[i];
+      decayTheta2=hq->hp2.decayTheta[i];
+
       //      cout <<" fitter " << nameAddition <<endl;
       //      cout <<"z["<<i <<"] : "<< hq->hp1.z[i]<<" z2: "<< hq->hp2.z[i]<<endl;
 
@@ -445,14 +452,15 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
       double theta1=event.jet1Theta;
       double theta2=event.jet2Theta;
 
-      if(mPhi1>TMath::Pi())
-	mPhi1-=2*TMath::Pi();
-      if(mPhi2>TMath::Pi())
-	mPhi2-=2*TMath::Pi();
-      if(theta1>TMath::Pi())
-	theta1-=2*TMath::Pi();
-      if(theta2>TMath::Pi())
-	theta2-=2*TMath::Pi();
+      //????
+///      if(mPhi1>TMath::Pi())
+///	mPhi1-=2*TMath::Pi();
+///   if(mPhi2>TMath::Pi())
+///	mPhi2-=2*TMath::Pi();
+///   if(theta1>TMath::Pi())
+///	theta1-=2*TMath::Pi();
+///   if(theta2>TMath::Pi())
+///	theta2-=2*TMath::Pi();
 
       ///////////xcheck
       //          cout <<event.runNr <<" "<<event.evtNr <<" "<<hq->hp1.z[i]  <<" " << hq->hp2.z[i] << " " <<hq->hp1.mass[i] <<" " << hq->hp2.mass[i] << " ";
@@ -461,7 +469,16 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 
    
       ///////end xcheck
+      (*rooTheta1)=decayTheta1;
+      (*rooTheta2)=decayTheta2;
+      (*rooPhi1)=mPhi1;
+      (*rooPhi2)=mPhi2;
+      (*rooM1)=hq->hp1.mass[i];
+      (*rooM2)=hq->hp2.mass[i];
+      (*rooZ1)=hq->hp1.z[i];
+      (*rooZ2)=hq->hp2.z[i];
 
+      unbinnedData->add(RooArgSet((*rooZ1),(*rooM1),(*rooZ2),(*rooM2),(*rooTheta1),(*rooTheta2),(*rooPhi1),(*rooPhi2)));    
 
 
       for(int bt=binType_m_m; bt<binType_end;bt++)
@@ -470,6 +487,7 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 	  int secondBin=*(binningMap[bt].second);
 	  float firstKin=*(meanMap[bt].first);
 	  float secondKin=*(meanMap[bt].second);
+
 
 	  if(bt<0 || chargeBin <0 || firstBin<0 || secondBin < 0 || phiR1Bin <0 || phiR2Bin<0|| phiRSumBin<0 || phiRDiffBin<0 || phiRTwoDiffBin<0)
 	    {
@@ -485,10 +503,30 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 	      continue;
 	    }
 
+
+
+
 	  if(chargeBin==quadPZ_ZN)
 	    {
 	      //	      cout <<"adding to pi0 " <<endl;
 	      //      	      cout <<"bt: " << bt << " chargeBin: " << chargeBin << "firstBin: " << firstBin <<" second " << secondBin <<" phiR1bin: "<< phiR1Bin << " phiR2Bin: " << phiR2Bin <<endl;
+	    }
+
+	  if(chargeBin==quadPN)
+	    {
+	      if(bt>binType_mOnly)
+		continue;
+	      rooBin->setIndex(bt);
+	      rooKin1->setIndex(firstBin);
+	      rooKin2->setIndex(secondBin);
+
+	      (*rooPhiSum)=phiRSum;
+
+	      //	      unbinnedData->add(RooArgSet((*rooBin),(*rooKin1),(*rooKin2),(*rooTheta1),(*rooTheta2),(*rooPhi1),(*rooPhi2)));
+
+	      //	      binnedData->add(RooArgSet((*rooBin),(*rooKin1),(*rooKin2),(*rooTheta1),(*rooTheta2),(*rooPhi1),(*rooPhi2)));
+	      unbinnedDataIff->add(RooArgSet((*rooBin),(*rooKin1),(*rooKin2),(*rooPhiSum)));
+
 	    }
 
 	  //	  cout <<"filling bt: "<< bt <<" chargeBin: " << chargeBin <<" sec bin : " << secondBin <<endl;
@@ -514,6 +552,13 @@ void MultiFitter::addHadQuadArray(HadronQuadArray* hq, MEvent& event,bool usePhi
 	  meanValues_kin2[bt][chargeBin][firstBin][secondBin]+=(weight*secondKin);
 	  //	  cout <<"added to mean values: " << firstKin <<" and " << secondKin << " now: "<< meanValues_kin1[bt][chargeBin][firstBin][secondBin] <<" and " << meanValues_kin2[bt][chargeBin][firstBin][secondBin]<<endl;
 	}
+
+
+
+
+
+
+
     }
 };
 
@@ -1026,9 +1071,61 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		  localWCounts=counts[bt][chargeBin][firstBin][secondBin];
 		  localCounts_wSq=counts_wSq[bt][chargeBin][firstBin][secondBin];
 
+
+		  cout <<"startign rooFit" <<endl;
+
+		  stringstream binCuts;
+		  binCuts<<"iKin1=="<<firstBin<<" &&  iKin2=="<<secondBin << " && iBin==" << bt;
+		  TCut binSelection=binCuts.str().c_str();
+		  cout <<"getting reduced dataset " <<endl;
+		  //		  RooDataSet* binSelectedDataSet=(RooDataSet*)unbinnedData->reduce(binSelection);
+		  RooDataSet* binSelectedDataSetIff=(RooDataSet*)unbinnedDataIff->reduce(binSelection);
+		  RooDataHist* binSelectedBinnedData=(RooDataHist*)binnedData->reduce(binSelection);
+
+		  cout <<"done " << endl;
+		  RooRealVar a1("a1","a1",0.0,-1.0,1.0);
+		  RooRealVar a2("a2","a2",0.0,-1.0,1.0);
+		  RooRealVar a3("a3","a3",0.0,-1.0,1.0);
+
+		  RooRealVar aIff("aIff","aIff",0.0,-1.0,1.0);
+
+
+		  //don't need the a0 I think
+		  //		  RooRealVar a0("a0","a0",binSelectedDataSet->numEntries());//,0.0,10*binSelectedDataSet->numEntries());
+		  //		  TF2 mFit("fit","[0]*cos(x+y)+[1]*cos(4*(x-y))+[2]*cos(2* (x-y))+1",0,2*TMath::Pi(),0,2*TMath::Pi());
+
+		  RooRealVar expNIff("num","num",binSelectedDataSetIff->numEntries());
+		  cout <<"do iff fit on " << binSelectedDataSetIff->numEntries()<< endl;
+		  RooGenericPdf myPdfIff("gpIff","gpIff","aIff*cos(phiSum)+1", RooArgSet(aIff,*rooPhiSum));
+		  RooExtendPdf myEPdfIff("egpIff","egpIff",myPdfIff,expNIff);
+		  cout <<"fit just iff term " << endl;
+		  myEPdfIff.fitTo(*binSelectedDataSetIff,RooFit::Extended());
+		  cout <<"done " <<endl;
+		  cout <<" do fit, construct pdf " <<endl;
+
+
+		  RooRealVar expN("num","num",binSelectedBinnedData->numEntries());
+		  RooGenericPdf myPdf("gp","gp","a1*cos(phi1+phi2)+a2*cos(1*(phi1-phi2))+a3*cos(2*(phi1-phi2))+1", RooArgSet(a1,a2,a3,*rooPhi1,*rooPhi2));
+		  RooExtendPdf myEPdf("egp","egp",myPdf,expN);
+		  myEPdf.fitTo(*binSelectedBinnedData,RooFit::Extended());
+		  cout <<"done with fit to binned.." <<endl;
+		  
+/////		  RooRealVar expN("num","num",binSelectedDataSet->numEntries());
+/////		  RooGenericPdf myPdf("gp","gp","a1*cos(phi1+phi2)+a2*cos(1*(phi1-phi2))+a3*cos(2*(phi1-phi2))+1", RooArgSet(a1,a2,a3,*rooPhi1,*rooPhi2));
+/////
+/////		  //		  RooRealVar expN("num","num",binSelectedDataSet->numEntries());
+/////		  //		  expN.setVal(binSelectedDataSet->numEntries());
+/////
+/////		  RooExtendPdf myEPdf("egp","egp",myPdf,expN);
+/////		  cout << " do fit to " << binSelectedDataSet->numEntries()<<" entries " <<endl;
+/////
+/////		  myEPdf.fitTo(*binSelectedDataSet,RooFit::Extended());
+/////		  //cout <<"done " << endl;
+		  //		  cout <<" status: " << fr->status() <<endl;
+		  //		  fr->Print();
+
 		  //check for min counts
 		  haveMinCounts=checkMinCounts(rawCounts[bt][chargeBin][firstBin][secondBin]);
-
 
 		  double AsDRHand, AsErrDRHand, AsDRIff, AsErrDRIff, AsDRG1T, AsErrDRG1T;
 
@@ -1042,7 +1139,7 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 
 		  ///go back for the time being...(used to be rawCounts...
 		  localSumRCounts=rawCountsSumR[bt][chargeBin][firstBin][secondBin];
-
+		
 		  localSumRCounts_wSq=countsSumR_wSq[bt][chargeBin][firstBin][secondBin];
 
 		  localDiffRCounts=rawCountsDiffR[bt][chargeBin][firstBin][secondBin];
@@ -1086,6 +1183,7 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		  TH1D myTwoDiffHistoMix("fitTwoDiffRHistoMix","fitTwoDiffRHistoMix",numAngBins,0,2*TMath::Pi());
 
 		  //does this respect the setBinError?, yes, doesn't make a difference, setBinError creates the same field...
+		
 		  myHisto.Sumw2();
 		  mySumHisto.Sumw2();
 		  myDiffHisto.Sumw2();
@@ -1152,7 +1250,7 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 			}
 		    }
 
-
+		
 
 
 		  /////////////////////////
@@ -1195,13 +1293,13 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		  //		  		  TF1 mDiffRFit("diffRFit","[0]*([1]*cos(x)+1)",0,2*TMath::Pi());
 		  //		  		  TF1 mTwoDiffRFit("twoDiffRFit","[0]*([1]*cos(x)+1)",0,2*TMath::Pi());
 
-		  TF2 mFit("fit","[0]*cos(x+y)+[1]*cos(4*(x-y))+[2]*cos(2* (x-y))+1",0,2*TMath::Pi(),0,2*TMath::Pi());
+		  TF2 mFit("fit","[0]*cos(x+y)+[1]*cos(1*(x-y))+[2]*cos(2* (x-y))+1",0,2*TMath::Pi(),0,2*TMath::Pi());
 		  TF1 mSumRFit("sumRFit","[0]*cos(x)+1",0,2*TMath::Pi());
-		  TF1 mDiffRFit("diffRFit","[0]*cos(4*x)+1",0,2*TMath::Pi());
+		  TF1 mDiffRFit("diffRFit","[0]*cos(1*x)+1",0,2*TMath::Pi());
 		  TF1 mTwoDiffRFit("twoDiffRFit","[0]*cos(x)+1",0,2*TMath::Pi());
 
 		  //
-
+		
 		  mSumRFit.SetParameters(f1params);
 		  mFit.SetParameters(f2params);
 		  myHisto.Fit("fit","q");
@@ -1299,7 +1397,7 @@ void MultiFitter::doFits(MultiFitter* mfMix)
 		}
 	      eventCounts[bt][chargeBin][firstBin]->Write();
 	    }
-
+	
 
 
 	}

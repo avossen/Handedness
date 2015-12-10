@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -A belle        # this is the account to which time is charged --
 #                       # use `belle' for belle analysis 
-#SBATCH -t 12:00:00     # time limit for job in HH:MM:SS
+#SBATCH -t 22:00:00     # time limit for job in HH:MM:SS
 #SBATCH -N 1            # number of CPU cores requested
 #SBATCH -o /pic/projects/belle/voss771/handOut/AsymCompOut/O_subData_ex55_continuum.out
 #SBATCH -e /pic/projects/belle/voss771/handOut/AsymCompOut/O_subData_ex55_continuum.err
@@ -35,14 +35,17 @@ export LD_LIBRARY_PATH=/people/voss771/handedness/AsymCompiledG1T:`root-config -
 echo    $LD_LIBRARY_PATH
 
 /people/voss771/handedness/AsymCompCompiledG1T/TwoHadAsymsCMod /pic/projects/belle/voss771/subData_ex55_continuum
-find . -iname '*55*.root' -amin -60 -print0 
-find . -iname '*55*.root' -amin -60 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;
+echo "Done with running script" 
+ls -lrth
+find . -iname '*55*.root' -amin -300 -print0 
+find . -iname '*55*.root' -amin -300 -exec cp {} /pic/projects/belle/voss771/AsymmetriesData/ \;
 
 
 dateString=`date +%d%b%Y`
 
 # Grab the exit code of BASF
 BASFRET=$?
+echo $BASFRET
 echo VOSS771_BASF_FINISH `date`
 
 

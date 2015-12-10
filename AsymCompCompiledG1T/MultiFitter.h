@@ -1,6 +1,11 @@
 #ifndef MULTI_FITTER_H
 #define MULTI_FITTER_H
-
+#include "RooArgSet.h"
+#include "RooDataSet.h"
+#include "RooRealVar.h"
+#include "RooCategory.h"
+#include "RooDataHist.h"
+#include "BinningContainer.h"
 #include "NamedExp.h"
 #include "MEvent.h"
 #include "TwoHadAsymsCommons.h"
@@ -15,15 +20,15 @@
 
 
 
-#define NumParticles 7
+
 
 /// DO NOT FORGET to change the number of kinematic binnings in the cxx file!!!
 /// and if NEW FIELDS ARE ADDED, they also have to be added in the '=' operator implementation of HadronQuad and PairArray..
 enum binningType{binType_m_m, binType_z_z,binType_z_m, binType_m_z, binType_labTheta_z, binType_kinFact_z, binType_zOnly, binType_mOnly, binType_labThetaOnly, binType_qTOnly, binType_kinFactOnly, binType_hadOpeningOnly, binType_ThrustThetaPhi,binType_ThrustPhiTheta, binType_multOnly, binType_EmissOnly, binType_ThrustOnly,binType_sinDecThetaOnly,binType_cosDecThetaOnly,binType_end};
 enum quadType{quadPN, quadPZ_ZN, quadPN_PZ, quadPN_ZN,quadPZ, quadZN,quadPP_NN, quadUnknownCharge, quadTypeEnd};
-enum plotType{plotType_2D, plotType_1D, plotType_DR,plotType_end};
+enum plotType{plotType_2D, plotType_1D, plotType_DR,plotType_RF,plotType_end};
 
-class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
+class MultiFitter: public ReaderBase, NamedExp, BinningContainer//for the normalize angle
 {
  public:
   MultiFitter(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc,int numAngBins=16):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),numAngBins(numAngBins), minCounts(12)
@@ -102,8 +107,65 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 	    }
 	}
 
+      cout <<"allocating RooDataSets.." <<endl;
+      rooPhi1=new RooRealVar("phi1","phi1",0,2*TMath::Pi());
+      rooZ1=new RooRealVar("z1","z1",0,1.0);
+      rooM1=new RooRealVar("m1","m1",0,3.0);
+      rooZ2=new RooRealVar("z2","z2",0,1.0);
+      rooM2=new RooRealVar("m2","m2",0,3.0);
+
+      rooPhi2=new RooRealVar("phi2","phi2",0,2*TMath::Pi());
+      rooPhiSum=new RooRealVar("phiSum","phiSum",0,2*TMath::Pi());
+      rooTheta1=new RooRealVar("theta1","theta1",0,TMath::Pi());
+      rooTheta2=new RooRealVar("theta2","theta2",0,TMath::Pi());
+
+      rooPhi1->setBins(16);
+      rooPhi2->setBins(16);
+      rooTheta1->setBins(8);
+      rooTheta2->setBins(8);
+      
+      rooBin = new RooCategory("iBin","iBin");
+      rooKin1=new RooCategory("iKin1","iKin1");
+      rooKin2=new RooCategory("iKin2","iKin2");
+    
+      for(int i=0;i<maxKinBins;i++)
+	{
+	  stringstream ss; 
+	  ss <<"kin1Bin";
+	  ss << i;
+	  rooKin1->defineType(ss.str().c_str(),i);
+	  cout <<"defining type " << ss.str().c_str()<<endl;
+	  stringstream ss2; 
+	  ss2 <<"kin2Bin";
+	  ss2 << i;
+	  rooKin2->defineType(ss2.str().c_str(),i);
+	  cout <<"defining type " << ss2.str().c_str()<<endl;
+	}
+      for(int iBt=0;iBt<numKinematicBinning;iBt++)
+	{
+	  //try to keep down the rooHist
+	  if(iBt>binType_mOnly)
+	    continue;
+	  stringstream ss; 
+	  ss <<"kinBin";
+	  ss << iBt;
+	  rooBin->defineType(ss.str().c_str(),iBt);
+	  cout <<"defining type " << ss.str().c_str()<<" index: "<< rooBin->getIndex()<<endl;
+	}
+
+      unbinnedData=new RooDataSet("data","data",RooArgSet(*rooZ1,*rooM1,*rooZ2,*rooM2,*rooTheta1,*rooTheta2,*rooPhi1,*rooPhi2));
+      cout <<"constructiong histogram with dimensions " << maxKinBins <<", " << numKinematicBinning <<", "<< rooTheta1->getBins() <<", " << rooTheta2->getBins() <<", " << rooPhi1->getBins()<<", " << rooPhi2->getBins()<<endl;
+
+      //      binnedData=new RooDataHist("binnedData","binnedData",RooArgSet(*rooTheta1,*rooTheta2,*rooPhi1,*rooPhi2));
+      //      cout <<"binned data has " << binnedData->numEntries()<<" bins" << endl;
+      //      binnedData=new RooDataHist("binnedData","binnedData",RooArgSet(*rooBin,*rooKin1,*rooKin2,*rooTheta1,*rooTheta2,*rooPhi1,*rooPhi2));
+      //      cout <<"now binned data has " << binnedData->numEntries()<<" bins" << endl;
+      //      binnedData=new RooDataHist("binnedData","binnedData",RooArgSet(*rooTheta1,*rooTheta2,*rooPhi1,*rooPhi2));
+      cout <<"done with construction..." <<endl;
+      unbinnedDataIff=new RooDataSet("dataIff","dataIff",RooArgSet(*rooBin,*rooKin1,*rooKin2,*rooPhiSum));
 
       cout <<"allocating " << numKinematicBinning <<" * " << NumCharge << " * " << maxKinBins <<" * " << maxKinBins <<" * " <<numAngBins <<" * " <<numAngBins<<endl;
+
       counts=allocateArray<double>(numKinematicBinning,NumCharges,maxKinBins,maxKinBins,numAngBins,numAngBins);
       countsSumR=allocateArray<double>(numKinematicBinning,NumCharges,maxKinBins,maxKinBins,numAngBins);//for comparison
       countsDiffR=allocateArray<double>(numKinematicBinning,NumCharges,maxKinBins,maxKinBins,numAngBins);//for comparison
@@ -199,8 +261,7 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     void loadThetaBinnings();
  public:
     vector<float> binningAng;
-    vector<float> binningM[NumParticles];
-    vector<float> binningZ[NumParticles];
+
     vector<float> binningLabTheta;
     vector<float> binningKinFact;
     vector<float> binningQt;
@@ -258,6 +319,9 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
     float cosDecTheta1;
     float cosDecTheta2;
 
+    float decayTheta1;
+    float decayTheta2;
+
     TH1D**** eventCounts;
 
 
@@ -280,6 +344,32 @@ class MultiFitter: public ReaderBase, NamedExp//for the normalize angle
 
     double**** meanValues_kin1;
     double**** meanValues_kin2;
+    RooDataSet* unbinnedData;
+    RooDataSet* unbinnedDataIff;
+    RooDataHist* binnedData;
+
+
+    RooRealVar* rooPhiSum;
+    RooRealVar* rooPhi1;
+    RooRealVar* rooPhi2;
+    RooRealVar* rooTheta1;
+    RooRealVar* rooTheta2;
+    RooRealVar* rooZ1;
+    RooRealVar* rooM1;
+    RooRealVar* rooZ2;
+    RooRealVar* rooM2;
+
+    RooCategory* rooKin1;
+    RooCategory* rooKin2;
+    RooCategory* rooBin;
+
+
+    RooRealVar* rooCollPhi;
+
+    RooRealVar* rooPhi0;
+
+
+
 };
 
 inline string MultiFitter::getName()

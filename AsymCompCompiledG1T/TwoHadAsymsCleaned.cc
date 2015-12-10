@@ -5,7 +5,8 @@
 #include "MEvent.h"
 #include "StyleSetter.h"
 #include "HadronQuadArray.h"
-#include "MultiFitter.h"
+
+#include "MultiFitterRF.h"
 #include "TwoHadAsymsCommons.h"
 #include "AcceptanceMap.h"
 #include "EventMixMap.h"
@@ -197,59 +198,59 @@ int main(int argc, char** argv)
 
 
 
-  MultiFitter fitter(const_cast<char*>("multFitOut"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterEventMix(const_cast<char*>("multFitOutEventMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  MultiFitterRF fitter(const_cast<char*>("multFitOut"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitter fitterEventMix(const_cast<char*>("multFitOutEventMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
 
-  AcceptanceMap accMap(const_cast<char*>("AccMap"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,&fitter);
-  AcceptanceMap accMapWeighted(const_cast<char*>("AccMapWeighted"),(ss.str()+"Weighted"),expNumber,onResonance,isUds,isCharm,mcData,&fitter);
+    AcceptanceMap accMap(const_cast<char*>("AccMap"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,&fitter);
+    AcceptanceMap accMapWeighted(const_cast<char*>("AccMapWeighted"),(ss.str()+"Weighted"),expNumber,onResonance,isUds,isCharm,mcData,&fitter);
 
-  MultiFitter fitterWeighted(const_cast<char*>("multFitOutWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterAccWeighted(const_cast<char*>("multFitOutAccWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterAccDoubleWeighted(const_cast<char*>("multFitOutAccDoubleWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+      MultiFitterRF fitterWeighted(const_cast<char*>("multFitOutWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterAccWeighted(const_cast<char*>("multFitOutAccWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterAccDoubleWeighted(const_cast<char*>("multFitOutAccDoubleWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
 
-  MultiFitter fitterZeroWeighted(const_cast<char*>("multFitOutZeroWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterZeroAccWeighted(const_cast<char*>("multFitOutZeroAccWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+    //  MultiFitterRF fitterZeroWeighted(const_cast<char*>("multFitOutZeroWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterZeroAccWeighted(const_cast<char*>("multFitOutZeroAccWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
 
-  MultiFitter fitterZero(const_cast<char*>("multFitOutZero"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterZeroWoA(const_cast<char*>("multFitOutZeroWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-
-
-  MultiFitter fitterWoA(const_cast<char*>("multFitOutWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterMinusWoA(const_cast<char*>("multFitOutMinusWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitterMinusWoAWeighted(const_cast<char*>("multFitOutMinusWoAWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+    //  MultiFitterRF fitterZero(const_cast<char*>("multFitOutZero"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+    //  MultiFitterRF fitterZeroWoA(const_cast<char*>("multFitOutZeroWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
 
 
-  MultiFitter fitterMix(const_cast<char*>("multFitMixOut"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  //  MultiFitter fitterPi0Sig(const_cast<char*>("multFitPi0Sig"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  //  MultiFitter fitterPi0Bg(const_cast<char*>("multFitPi0Bg"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  //  MultiFitter fitterPi0SigMix(const_cast<char*>("multiFitPi0SigMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  //  MultiFitter fitterPi0BgMix(const_cast<char*>("multiFitPi0BgMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  MultiFitterRF fitterWoA(const_cast<char*>("multFitOutWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterMinusWoA(const_cast<char*>("multFitOutMinusWoA"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterMinusWoAWeighted(const_cast<char*>("multFitOutMinusWoAWeighted"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+
+
+  //  MultiFitterRF fitterMix(const_cast<char*>("multFitMixOut"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterPi0Sig(const_cast<char*>("multFitPi0Sig"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterPi0Bg(const_cast<char*>("multFitPi0Bg"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterPi0SigMix(const_cast<char*>("multiFitPi0SigMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitterPi0BgMix(const_cast<char*>("multiFitPi0BgMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
   ;
-  MultiFitter fitMinusMix(const_cast<char*>("fitMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  MultiFitter fitMinusEventMix(const_cast<char*>("fitMinusEventMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-
-  //  MultiFitter fitPi0SigMinusMix(const_cast<char*>("fitPi0SigMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
-  //  MultiFitter fitPi0BgMinusMix(const_cast<char*>("fitPi0BgMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitMinusMix(const_cast<char*>("fitMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitMinusEventMix(const_cast<char*>("fitMinusEventMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  ;
+  //  MultiFitterRF fitPi0SigMinusMix(const_cast<char*>("fitPi0SigMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
+  //  MultiFitterRF fitPi0BgMinusMix(const_cast<char*>("fitPi0BgMinusMix"),ss.str(),expNumber,onResonance,isUds,isCharm,mcData,NUM_PHI_BINS);
 
   fitter.setName("Normal");
-  fitterEventMix.setName("EventMix");
+  //  fitterEventMix.setName("EventMix");
   fitterWeighted.setName("Weighted");
-  fitterAccWeighted.setName("AccWeighted");
-  fitterAccDoubleWeighted.setName("AccDoubleWeighted");
-  fitterZeroWeighted.setName("ZeroWeighted");
-  fitterZeroAccWeighted.setName("ZeroAccWeighted");
+  //  fitterAccWeighted.setName("AccWeighted");
+  //  fitterAccDoubleWeighted.setName("AccDoubleWeighted");
+  //  fitterZeroWeighted.setName("ZeroWeighted");
+  //  fitterZeroAccWeighted.setName("ZeroAccWeighted");
   fitterWoA.setName("NormalWoA");
-  fitterMinusWoA.setName("NormalMinusWoA");
-  fitterMinusWoAWeighted.setName("NormalMinusWoAWeighted");
-  fitterZero.setName("NormalZero");
-  fitterZeroWoA.setName("NormalZeroWoA");
-  fitterMix.setName("RMix");
+  //  fitterMinusWoA.setName("NormalMinusWoA");
+  //  fitterMinusWoAWeighted.setName("NormalMinusWoAWeighted");
+  //  fitterZero.setName("NormalZero");
+  //  fitterZeroWoA.setName("NormalZeroWoA");
+  //  fitterMix.setName("RMix");
   //  fitterPi0Sig.setName("Pi0Sig");
   //  fitterPi0Bg.setName("Pi0Bg");
   //  fitterPi0SigMix.setName("Pi0SigMix");
   //  fitterPi0BgMix.setName("Pi0BgMix");
-  fitMinusMix.setName("fitMinusMix");
-  fitMinusEventMix.setName("fitMinusEventMix");
+  //  fitMinusMix.setName("fitMinusMix");
+  //  fitMinusEventMix.setName("fitMinusEventMix");
   //  fitPi0SigMinusMix.setName("fitPi0SigMinusMix");
   //  fitPi0BgMinusMix.setName("fitPi0BgMinusMix");
 
@@ -361,7 +362,8 @@ int main(int argc, char** argv)
 	    {
 	      //	      cout <<"mix it .." <<endl;
 	      prevHadQuad[iB]->mixEvent(hadQuads);
-	      fitterEventMix.addHadQuadArray(prevHadQuad[iB],myEvent);
+
+	      ///	      fitterEventMix.addHadQuadArray(prevHadQuad[iB],myEvent);
 	    }
 	}
       evMixMap.addHadQuadArray(hadQuads,myEvent);
@@ -427,19 +429,22 @@ int main(int argc, char** argv)
 
 
       fitter.addHadQuadArray(&hadQuads, myEvent, false,false);
-      fitterWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
-      fitterAccWeighted.addHadQuadArray(&hadQuadsAccWeighted,myEvent);
-      fitterAccDoubleWeighted.addHadQuadArray(&hadQuadsAccDoubleWeighted,myEvent);
-      fitterZeroWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent,true);
-      fitterMinusWoAWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
-      fitterMinusWoA.addHadQuadArray(&hadQuads, myEvent);
+      if(isMC==mcAsData || isMC==mcFlagWoA)
+	{
+	  fitterWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
+	}
+      //      fitterAccWeighted.addHadQuadArray(&hadQuadsAccWeighted,myEvent);
+      //      fitterAccDoubleWeighted.addHadQuadArray(&hadQuadsAccDoubleWeighted,myEvent);
+      //      fitterZeroWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent,true);
+      //      fitterMinusWoAWeighted.addHadQuadArray(&hadQuadsWeighted,myEvent);
+      //      fitterMinusWoA.addHadQuadArray(&hadQuads, myEvent);
 
 
-      fitterZero.addHadQuadArray(&hadQuads, myEvent,true);
-      fitterZeroAccWeighted.addHadQuadArray(&hadQuadsAccWeighted, myEvent,true);
-      fitterMix.addHadQuadArray(&hadQuadMix,myEvent);
-      fitMinusMix.addHadQuadArray(&hadQuads, myEvent);
-      fitMinusEventMix.addHadQuadArray(&hadQuads, myEvent);
+      //      fitterZero.addHadQuadArray(&hadQuads, myEvent,true);
+      //      fitterZeroAccWeighted.addHadQuadArray(&hadQuadsAccWeighted, myEvent,true);
+      //      fitterMix.addHadQuadArray(&hadQuadMix,myEvent);
+      //      fitMinusMix.addHadQuadArray(&hadQuads, myEvent);
+      //      fitMinusEventMix.addHadQuadArray(&hadQuads, myEvent);
       //      fitterPi0Sig.addHadQuadArray(&hadQuadPi0Sig,myEvent);
       //      fitterPi0Bg.addHadQuadArray(&hadQuadPi0Bg,myEvent);
 
@@ -534,8 +539,9 @@ int main(int argc, char** argv)
 		}
 	    }
 	  //	  cout <<"adding had quad to fitter... " <<endl;
-	  fitterWoA.addHadQuadArray(&hadQuadsWoA, myEventWoA);
-	  fitterZeroWoA.addHadQuadArray(&hadQuadsWoA, myEventWoA,true);
+
+	  	  fitterWoA.addHadQuadArray(&hadQuadsWoA, myEventWoA);
+		  //	  fitterZeroWoA.addHadQuadArray(&hadQuadsWoA, myEventWoA,true);
 	}
     }
 
@@ -562,24 +568,25 @@ int main(int argc, char** argv)
 
 
   fitter.doFits();
-  fitterEventMix.doFits();
-  fitterWeighted.doFits();
-  fitterAccWeighted.doFits();
-  fitterZeroAccWeighted.doFits();
-  fitterAccDoubleWeighted.doFits();
-  fitterZeroWeighted.doFits();
-  fitterZero.doFits();
+  //  fitterEventMix.doFits();
+  if(isMC==mcAsData || isMC==mcFlagWoA)
+    fitterWeighted.doFits();
+  //  fitterAccWeighted.doFits();
+  //  fitterZeroAccWeighted.doFits();
+  //  fitterAccDoubleWeighted.doFits();
+  //  fitterZeroWeighted.doFits();
+  //  fitterZero.doFits();
   cout <<"fitter WoA doing fits..." <<endl;
   fitterWoA.doFits();
-  fitterZeroWoA.doFits();
+  //  fitterZeroWoA.doFits();
   cout <<"fitter minus woa doing fits..."<<endl;
-  fitterMinusWoA.doFits(&fitterWoA);
-  fitterMinusWoAWeighted.doFits(&fitterWoA);
+  //  fitterMinusWoA.doFits(&fitterWoA);
+  //  fitterMinusWoAWeighted.doFits(&fitterWoA);
   cout <<"all done" <<endl;
 
-  fitMinusMix.doFits(&fitterMix);
-  fitMinusEventMix.doFits(&fitterEventMix);
-  fitterMix.doFits();
+  //  fitMinusMix.doFits(&fitterMix);
+  //  fitMinusEventMix.doFits(&fitterEventMix);
+  //  fitterMix.doFits();
   //  fitPi0SigMinusMix.doFits(&fitterPi0SigMix);
   //  fitPi0BgMinusMix.doFits(&fitterPi0BgMix);
   //  fitterPi0SigMix.doFits();
@@ -593,30 +600,30 @@ int main(int argc, char** argv)
   cout <<"done " <<endl;
   //should be PN
 
-  vector<MultiFitter*> myFitterArray;
+  vector<MultiFitterRF*> myFitterArray;
   myFitterArray.push_back(&fitter);
-  myFitterArray.push_back(&fitterAccWeighted);
-  myFitterArray.push_back(&fitterAccDoubleWeighted);
-  myFitterArray.push_back(&fitterEventMix);
-  myFitterArray.push_back(&fitMinusEventMix);
+  //  myFitterArray.push_back(&fitterAccWeighted);
+  //  myFitterArray.push_back(&fitterAccDoubleWeighted);
+  //  myFitterArray.push_back(&fitterEventMix);
+  //  myFitterArray.push_back(&fitMinusEventMix);
 
-  myFitterArray.push_back(&fitterZero);
-  myFitterArray.push_back(&fitterZeroAccWeighted);
-    myFitterArray.push_back(&fitterMix);
-  myFitterArray.push_back(&fitMinusMix);
+  //  myFitterArray.push_back(&fitterZero);
+  //  myFitterArray.push_back(&fitterZeroAccWeighted);
+  //    myFitterArray.push_back(&fitterMix);
+  //  myFitterArray.push_back(&fitMinusMix);
 
   if(chWoA)
     {
-      myFitterArray.push_back(&fitterWeighted);
-            myFitterArray.push_back(&fitterZeroWeighted);
-      myFitterArray.push_back(&fitterWoA);
-      myFitterArray.push_back(&fitterZeroWoA);
+            myFitterArray.push_back(&fitterWeighted);
+	    //            myFitterArray.push_back(&fitterZeroWeighted);
+	          myFitterArray.push_back(&fitterWoA);
+		  //      myFitterArray.push_back(&fitterZeroWoA);
       //      myFitterArray.push_back(&fitterMinusWoA);
       //      myFitterArray.push_back(&fitterMinusWoAWeighted);
     }
      
 
-  for(vector<MultiFitter*>::iterator it=myFitterArray.begin();it!=myFitterArray.end();it++)
+  for(vector<MultiFitterRF*>::iterator it=myFitterArray.begin();it!=myFitterArray.end();it++)
     {
       (*it)->saveAsymmetries();   
       //      (*it)->savePlot(binType_m_m,quadPN);

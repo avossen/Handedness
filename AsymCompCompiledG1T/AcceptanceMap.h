@@ -5,11 +5,12 @@
 #include <sstream>
 #include "TH2D.h"
 #include "TwoHadAsymsCommons.h"
-#include "MultiFitter.h"
+#include "BinningContainer.h"
+
 class AcceptanceMap: public NamedExp,ReaderBase
 {
  public:
-  AcceptanceMap(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc, MultiFitter* mfBinning):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),m_weightingType(MZ), m_mfBinning(mfBinning)
+  AcceptanceMap(const char* filenameBase,string nameAdd, int exNr, bool onRes, bool uds, bool charm,bool mc, BinningContainer* mfBinning):NamedExp(filenameBase,nameAdd,exNr,onRes,uds,charm,mc),m_weightingType(MZ), m_mfBinning(mfBinning)
     {
       maxOpenAngle=acos(0.8);
       maxZValue=1.1;
@@ -114,7 +115,7 @@ class AcceptanceMap: public NamedExp,ReaderBase
     double***** arrAccMap_MZ1;
     double***** arrAccMap_MZ2;
 
-    MultiFitter* m_mfBinning;
+    BinningContainer* m_mfBinning;
     TH2D** acceptanceMap;
     TH2D* acceptanceMapZCut;
     TH2D* acceptanceMapThrust;
